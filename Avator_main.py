@@ -23,6 +23,7 @@ door_rec = False
 kick_ball_rec = False
 floor_rec = False
 
+
 img_debug = 0
 action_DEBUG = False
 box_debug = False
@@ -30,22 +31,22 @@ stream_pic = False
 robot_IP = "192.168.43.201"
 single_debug = 0
 
-chest_ret = True  # 读取图像标志位
-ret = False  # 读取图像标志位
-ChestOrg_img = None  # 原始图像更新
-HeadOrg_img = None  # 原始图像更新
+chest_ret = True     # 读取图像标志位
+ret = False           # 读取图像标志位
+ChestOrg_img = None   # 原始图像更新
+HeadOrg_img = None    # 原始图像更新
 ChestOrg_copy = None
 HeadOrg_copy = None
 
 sleep_time_s = 0.01
 sleep_time_l = 0.05
-real_test = 1  # yw:这个量为1表示是实际赛道情况，机器人会执行相应的动作，否则就只打印出现在想做什么但是并不会实际做出来。
+real_test = 1       #yw:这个量为1表示是实际赛道情况，机器人会执行相应的动作，否则就只打印出现在想做什么但是并不会实际做出来。
 reset = 0
 
 if stream_pic:
-    stream_head = "http://" + robot_IP + ":8082/?action=stream?dummy=param.mjpg"
+    stream_head = "http://" + robot_IP +":8082/?action=stream?dummy=param.mjpg"
     cap_head = cv2.VideoCapture(stream_head)
-    stream_chest = "http://" + robot_IP + ":8080/?action=stream?dummy=param.mjpg"
+    stream_chest = "http://" + robot_IP +":8080/?action=stream?dummy=param.mjpg"
     cap_chest = cv2.VideoCapture(stream_chest)
 else:
     cap_chest = cv2.VideoCapture(0)
@@ -53,86 +54,77 @@ else:
 color_range = {
     'yellow_door': [(20, 140, 60), (40, 240, 150)],
     'black_door': [(25, 25, 10), (110, 150, 30)],
-    'blue_baf': [(93, 149, 74), (105, 252, 152)],  # yw:挡板的蓝色
-    'black_dir': [(45, 22, 13), (128, 135, 57)],  # yw:地雷的黑色
-    'gray_dir': [(73, 28, 70), (88, 83, 182)],  # yw：地雷关卡地板的灰色
-    'green_hole_chest': [(67, 108, 68), (76, 243, 155)],  # yw:过坑的绿色（胸部检测）
-    'green_hole_head': [(67, 140, 39), (76, 255, 104)],  # yw:过坑的绿色（头部检测)
-    'blue_floor': [(100, 185, 155), (105, 234, 229)],  # yw:蓝色台阶
-    'green_floor': [(69, 155, 86), (75, 214, 155)],  # yw:绿色台阶
-    'red_floor1': [(0, 153, 142), (2, 206, 221)],  # yw:红色台阶   我们取红色台阶需要有两个值
-    'red_floor2': [(177, 153, 142), (179, 206, 221)],
+    'blue_baf':[(93 , 149 , 74), (105 , 252 , 152)],#yw:挡板的蓝色
+    'black_dir':[(45,22,13),(128,135,57)],     #yw:地雷的黑色
+    'gray_dir':[(73 , 28 , 70), (88 , 83 , 182)],#yw：地雷关卡地板的灰色
+    'green_hole_chest':[(67 , 108 , 68), (76 , 243 , 155)],#yw:过坑的绿色（胸部检测）
+    'green_hole_head':[(67 , 140 , 39), (76 , 255 , 104)],#yw:过坑的绿色（头部检测)
+    'blue_floor':[(100 , 185 , 155), (105 , 234 , 229)],#yw:蓝色台阶
+    'green_floor':[(69 , 155 , 86), (75 , 214 , 155)],#yw:绿色台阶
+    'red_floor1':[(0, 153 , 142), (2 , 206 , 221)],#yw:红色台阶   我们取红色台阶需要有两个值
+    'red_floor2':[(177 , 153 , 142), (179 , 206 , 221)],
     # 'red_XP1':[(0 , 104 , 126), (3 , 177 , 188)],#yw:红色下坡   他这里取了两个掩模做了或运算  不过这两个掩模的值怎么来的我不清楚。
     # 'red_XP2':[(173 , 98 , 111), (179 , 188 , 193)],
-    'white_ball_head': [(93, 13, 75), (123, 62, 181)],  # yw：踢的白球
-    'white_ball_chest': [(0, 0, 89), (176, 60, 255)],
-    'd_red_ball_floor1': [(177, 99, 129), (179, 134, 143)],  # yw:这个和下面这个应该是砖
-    'd_red_ball_floor2': [(75, 18, 182), (90, 36, 206)],
-    'blue_hole_chest': [(111, 86, 111), (133, 198, 179)],  # yw:踢球洞的蓝色圈
-    'blue_hole_head': [(112, 90, 49), (146, 209, 111)],
-    'green_bridge': [(69, 116, 115), (79, 212, 176)],  # yw:绿色桥
-    'head_blue_door': [(100, 117, 70), (109, 228, 129)],  # wc:蓝色门
+    'white_ball_head': [(93 , 13 , 75), (123 , 62 , 181)],  # yw：踢的白球
+    'white_ball_chest':[(0 , 0 , 89), (176 , 60 , 255)],
+    'd_red_ball_floor1':[(177 , 99 , 129), (179 , 134 , 143)],#yw:这个和下面这个应该是砖
+    'd_red_ball_floor2':[(75 , 18 , 182), (90 , 36 , 206)],
+    'blue_hole_chest': [(111 , 86 , 111), (133 , 198 , 179)],#yw:踢球洞的蓝色圈
+    'blue_hole_head' : [(112 , 90 , 49), (146 , 209 , 111)],
+    'green_bridge':[(69 , 116 , 115), (79 , 212 , 176)],#yw:绿色桥
+    'head_blue_door':[(100 , 117 , 70), (109 , 228 , 129)],#wc:蓝色门
 }
 
-
 #################################################################识别
-# 台阶识别
-def floor_detect(frame, color):  # 该函数输入值为图片和期待检测的颜色
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    mask = cv2.inRange(hsv, color_range[color][0], color_range[color][1])  # 图像，lower，upper。在lower和upper之间的像素变为255，否则变为0
+#台阶识别
+def floor_detect(frame,color):#该函数输入值为图片和期待检测的颜色
+    hsv = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
+    mask=cv2.inRange(hsv,color_range[color][0], color_range[color][1])#图像，lower，upper。在lower和upper之间的像素变为255，否则变为0
     # cv2.imshow("mask",mask)
     # cv2.waitKey(0)
-    _, contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL,
-                                              cv2.CHAIN_APPROX_NONE)  # 找出轮廓 https://blog.csdn.net/hjxu2016/article/details/77833336/
+    _, contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)  # 找出轮廓 https://blog.csdn.net/hjxu2016/article/details/77833336/
     areaMaxContour, area_max = getAreaMaxContour1(contours)  # 找出最大轮廓
     percent = round(100 * area_max / (chest_r_width * chest_r_height), 2)  # 最大轮廓的百分比
     if areaMaxContour is not None:
         # print(percent)
-        if percent > 0.01:
+        if percent>0.01:
             return 1
-        else:
-            return 0
-    else:
-        return 0
-
+        else:return 0
+    else:return 0
 
 def floor_judge(frame):
-    color = 'color11'
-    if floor_detect(frame, color) == 1:
-        color = 'color22'
-        if floor_detect(frame, color) == 1:
-            color = 'color33'
-            if floor_detect(frame, color) == 1:
+    color='color11'
+    if floor_detect(frame,color)==1:
+        color='color22'
+        if floor_detect(frame,color)==1:
+            color='color33'
+            if floor_detect(frame,color)==1:
                 return 1
-            else:
-                return 0
-        else:
-            return 0
-    else:
-        return 0
+            else:return 0
+        else:return 0
+    else:return 0
 
-
-# 挡板识别
+#挡板识别
 def baffle_recognize():
     global org_chest_image
     org_chest_image = ChestOrg_img.copy()
     color = 'blue_baf'
     src = org_chest_image.copy()
-    src = src[int(100):int(500), int(50):int(500)]
+    src = src[int(100):int(500),int(50):int(500)]
     src = cv2.GaussianBlur(src, (5, 5), 0)
     hsv_img = cv2.cvtColor(src, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(hsv_img, color_range[color][0], color_range[color][1])
     mask = cv2.dilate(mask, None, iterations=8)
-    # mask = cv2.erode(mask,None,iterations=10)
+    #mask = cv2.erode(mask,None,iterations=10)
     _, contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
     if len(contours) > 0:
-        max_area_contour, contour_max_area = getAreaMaxContour1(contours)
+        max_area_contour,contour_max_area = getAreaMaxContour1(contours) 
         Area = cv2.contourArea(max_area_contour)
-        rect = cv2.minAreaRect(max_area_contour)  # 最小外接矩形
-        box = np.int0(cv2.boxPoints(rect))  # 最小外接矩形的四个顶点
-        edge1 = math.sqrt(math.pow(box[3, 1] - box[2, 1], 2) + math.pow(box[3, 0] - box[2, 0], 2))
-        edge2 = math.sqrt(math.pow(box[3, 1] - box[0, 1], 2) + math.pow(box[3, 0] - box[0, 0], 2))
-        ratio = edge1 / edge2  # 长与宽的比值大于3认为是条线
+        rect = cv2.minAreaRect(max_area_contour)#最小外接矩形
+        box = np.int0(cv2.boxPoints(rect))#最小外接矩形的四个顶点
+        edge1=math.sqrt(math.pow(box[3, 1] - box[2, 1], 2) + math.pow(box[3, 0] - box[2, 0], 2))
+        edge2=math.sqrt(math.pow(box[3, 1] - box[0, 1], 2) + math.pow(box[3, 0] - box[0, 0], 2))
+        ratio=edge1/edge2   # 长与宽的比值大于3认为是条线
 
         # print(contour_max_area)
         # print(box)
@@ -149,19 +141,18 @@ def baffle_recognize():
         else:
             return False
 
-
-# 过坑识别
-def hole_recognize():  # yw：hole_recognize和hole_recognize_2的区别在于颜色不一样，前者是绿色，后者是蓝色。
+#过坑识别
+def hole_recognize():#yw：hole_recognize和hole_recognize_2的区别在于颜色不一样，前者是绿色，后者是蓝色。
     global org_chest_img
     org_chest_img = ChestOrg_img.copy()
     Area = 0
     color = 'green_hole_chest'
     src = org_chest_img.copy()
-    src = src[int(100):int(400), int(50):int(500)]  # yw：这里我记得是Y，X,切片顺序与常识不一样
+    src = src[int(100):int(400),int(50):int(500)]#yw：这里我记得是Y，X,切片顺序与常识不一样
     src = cv2.GaussianBlur(src, (5, 5), 0)
     hsv_img = cv2.cvtColor(src, cv2.COLOR_BGR2HSV)
-    mask = cv2.inRange(hsv_img, color_range[color][0], color_range[color][1])  # yw：用HSV空间分割颜色有更好的效果
-    closed = cv2.dilate(mask, None, iterations=5)  # yw：膨胀5次，腐蚀8次。但为什么核为NONE？
+    mask = cv2.inRange(hsv_img, color_range[color][0], color_range[color][1])#yw：用HSV空间分割颜色有更好的效果
+    closed = cv2.dilate(mask, None, iterations=5)#yw：膨胀5次，腐蚀8次。但为什么核为NONE？
     closed = cv2.erode(closed, None, iterations=8)
 
     # cv2.imshow("closed",closed)
@@ -172,7 +163,7 @@ def hole_recognize():  # yw：hole_recognize和hole_recognize_2的区别在于�
         max_area = max(contours, key=cv2.contourArea)
         Area = cv2.contourArea(max_area)
         rect = cv2.minAreaRect(max_area)
-        # print(rect[0])
+        #print(rect[0])
         # # print(Area)
     _, contours2, hierarchy2 = cv2.findContours(closed, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
 
@@ -184,14 +175,13 @@ def hole_recognize():  # yw：hole_recognize和hole_recognize_2的区别在于�
     else:
         return False
 
-
 def hole_recognize_2():
     global org_chest_img
     org_chest_img = ChestOrg_img.copy()
     Area = 0
     color = 'blue_hole_chest'
     src = org_chest_img.copy()
-    src = src[int(100):int(400), int(50):int(500)]
+    src = src[int(100):int(400),int(50):int(500)]
     src = cv2.GaussianBlur(src, (5, 5), 0)
     hsv_img = cv2.cvtColor(src, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(hsv_img, color_range[color][0], color_range[color][1])
@@ -206,7 +196,7 @@ def hole_recognize_2():
         max_area = max(contours, key=cv2.contourArea)
         Area = cv2.contourArea(max_area)
         rect = cv2.minAreaRect(max_area)
-        # print(rect[0])
+        #print(rect[0])
         # # print(Area)
     _, contours2, hierarchy2 = cv2.findContours(closed, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
 
@@ -218,14 +208,13 @@ def hole_recognize_2():
     else:
         return False
 
-
-# 地雷识别
+#地雷识别
 def obstacle_recognize():
     color = 'black_dir'
     src = ChestOrg_img.copy()
-    src = src[int(180):int(400), int(100):int(400)]
+    src = src[int(180):int(400),int(100):int(400)]
     src2 = HeadOrg_img.copy()
-    src2 = src2[int(160):int(400), int(20):int(480)]
+    src2 = src2[int(160):int(400),int(20):int(480)]
 
     # cv2.imshow("src0",src2)
 
@@ -246,8 +235,8 @@ def obstacle_recognize():
     _, contours2, hierarchy2 = cv2.findContours(mask3, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
     # print(len(contours))
-    if len(contours2) > 0:
-        max_area_contour, contour_max_area = getAreaMaxContour1(contours2)
+    if len(contours2) > 0: 
+        max_area_contour,contour_max_area = getAreaMaxContour1(contours2) 
         Area = contour_max_area
         # print(Area)
 
@@ -260,8 +249,7 @@ def obstacle_recognize():
         else:
             return False
 
-
-# 楼梯识别
+#楼梯识别
 def floor_recognize():
     src = ChestOrg_img.copy()
     # src = src[int(100):int(400),int(50):int(500)]
@@ -272,8 +260,7 @@ def floor_recognize():
     else:
         return False
 
-
-# 过桥识别
+#过桥识别
 def bridge_recognize():
     color = 'green_bridge_rec'  # 颜色变量设置为桥面所用
     contour_max_area = 0  # 初始化
@@ -346,8 +333,7 @@ def bridge_recognize_2():
     else:
         return False
 
-
-# 踢球识别
+#踢球识别
 def kick_ball_recognize():
     color = 'kick_ball_rec'
     Area = 0
@@ -362,15 +348,14 @@ def kick_ball_recognize():
     # cv2.imshow("mask",mask2)
     # cv2.waitKey()
     # print(len(contours))
-    if len(contours) > 0:
-        max_area_contour, contour_max_area = getAreaMaxContour1(contours)
+    if len(contours) > 0: 
+        max_area_contour,contour_max_area = getAreaMaxContour1(contours) 
         Area = contour_max_area
         # print(Area)
     if Area >= 30000:
         return True
     else:
         return False
-
 
 def area_calculate(color):
     contour_max_area = 0
@@ -381,14 +366,13 @@ def area_calculate(color):
     mask1 = cv2.erode(mask, None, iterations=4)
     mask2 = cv2.dilate(mask1, None, iterations=4)
     _, contours, hierarchy = cv2.findContours(mask2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-    if len(contours) > 0:
-        max_area_contour, contour_max_area = getAreaMaxContour1(contours)
+    if len(contours) > 0: 
+        max_area_contour,contour_max_area = getAreaMaxContour1(contours)
         return contour_max_area
     else:
         return 0
 
-
-def recognize():  # yw:这个函数应该是用来识别关卡的.该队伍本来准备通过这个函数识别所有关卡，但可能经过实操不大行，所以只用它识别洞和桥。
+def recognize():#yw:这个函数应该是用来识别关卡的.该队伍本来准备通过这个函数识别所有关卡，但可能经过实操不大行，所以只用它识别洞和桥。
     global obs_rec
     global baf_rec
     global hole_rec
@@ -396,16 +380,16 @@ def recognize():  # yw:这个函数应该是用来识别关卡的.该队伍本�
     global door_rec
     global kick_ball_rec
     global floor_rec
-    if hole_rec == False and hole_recognize():  # yw：绿洞
+    if hole_rec == False and hole_recognize():#yw：绿洞
         hole_rec = True
         return 1
-    elif hole_rec == False and hole_recognize_2():  # yw：蓝洞
+    elif hole_rec == False and hole_recognize_2():#yw：蓝洞
         hole_rec = True
         return 10
-    elif bridge_rec == False and bridge_recognize():  # yw：绿桥
+    elif bridge_rec == False and bridge_recognize():#yw：绿桥
         bridge_rec = True
         return 5
-    elif bridge_rec == False and bridge_recognize_2():  # yw：蓝桥    不过我不明白为什么要分成一个绿的一个蓝的，是为了防止光线原因识别错误颜色吗？
+    elif bridge_rec == False and bridge_recognize_2():#yw：蓝桥    不过我不明白为什么要分成一个绿的一个蓝的，是为了防止光线原因识别错误颜色吗？
         bridge_rec = True
         return 9
     # if bridge_rec == False and bridge_recognize():
@@ -429,8 +413,6 @@ def recognize():  # yw:这个函数应该是用来识别关卡的.该队伍本�
 
 
 acted_name = ""
-
-
 def action_append(act_name):
     global acted_name
 
@@ -445,12 +427,12 @@ def action_append(act_name):
         elif act_name != "forwardSlow0403" and (acted_name == "Forwalk02LR" or acted_name == "Forwalk02R"):
             # CMDcontrol.action_list.append("Forwalk02RS")
             # acted_name = act_name
-            print(act_name, "动作未执行 执行 Stand")
+            print(act_name,"动作未执行 执行 Stand")
             acted_name = "Forwalk02RS"
         elif act_name != "forwardSlow0403" and (acted_name == "Forwalk02RL" or acted_name == "Forwalk02L"):
             # CMDcontrol.action_list.append("Forwalk02LS")
             # acted_name = act_name
-            print(act_name, "动作未执行 执行 Stand")
+            print(act_name,"动作未执行 执行 Stand")
             acted_name = "Forwalk02LS"
         elif act_name == "forwardSlow0403":
             acted_name = "Forwalk02R"
@@ -472,17 +454,17 @@ def action_append(act_name):
         time.sleep(2)
 
 
-def getAreaMaxContour1(contours):
+def getAreaMaxContour1(contours):    
     contour_area_temp = 0
     contour_area_max = 0
     area_max_contour = None
-    for c in contours:
-        contour_area_temp = math.fabs(cv2.contourArea(c))  # 计算轮廓面积
+    for c in contours:  
+        contour_area_temp = math.fabs(cv2.contourArea(c))  #计算轮廓面积
         if contour_area_temp > contour_area_max:
             contour_area_max = contour_area_temp
-            if contour_area_temp > 25:
+            if contour_area_temp > 25:  
                 area_max_contour = c
-    return area_max_contour, contour_area_max
+    return area_max_contour, contour_area_max  
 
 
 def getAreaMaxContour2(contours, area=1):
@@ -492,7 +474,7 @@ def getAreaMaxContour2(contours, area=1):
         contour_area_temp = math.fabs(cv2.contourArea(c))
         if contour_area_temp > contour_area_max:
             contour_area_max = contour_area_temp
-            if contour_area_temp > area:
+            if contour_area_temp > area:  
                 area_max_contour = c
     return area_max_contour
 
@@ -500,7 +482,7 @@ def getAreaMaxContour2(contours, area=1):
 def getLine_SumContour(contours, area=1):
     global handling
     contours_sum = None
-    for c in contours:
+    for c in contours:  
         area_temp = math.fabs(cv2.contourArea(c))
         rect = cv2.minAreaRect(c)  # 最小外接矩形
         box = np.int0(cv2.boxPoints(rect))  # 最小外接矩形的四个顶点
@@ -540,7 +522,7 @@ def getLine_SumContour(contours, area=1):
                     if img_debug:
                         cv2.imshow('handling', handling)
                         cv2.waitKey(10)
-        else:
+        else:  
             rect = cv2.minAreaRect(c)  # 最小外接矩形
             box = np.int0(cv2.boxPoints(rect))  # 最小外接矩形的四个顶点
             if box_debug:
@@ -550,10 +532,9 @@ def getLine_SumContour(contours, area=1):
 
     return contours_sum
 
-
-# 根据颜色边缘调整角度与位置（头部）
+#根据颜色边缘调整角度与位置（头部）
 def edge_angle(color):
-    global HeadOrg_img, chest_copy, reset, skip, handling
+    global HeadOrg_img,chest_copy, reset, skip,handling
     global handling
     angle_ok_flag = False
     angle = 90
@@ -575,7 +556,7 @@ def edge_angle(color):
 
         # 获取图像中心点坐标x, y
         center = []
-        # 开始处理图像
+        #开始处理图像
         hsv = cv2.cvtColor(frame_mask, cv2.COLOR_BGR2HSV)
         hsv = cv2.GaussianBlur(hsv, (3, 3), 0)
         Imask = cv2.inRange(hsv, color_range[color][0], color_range[color][1])
@@ -587,7 +568,7 @@ def edge_angle(color):
         # cv2.imshow("opened",Imask)
         # print("len:",len(cnts))
 
-        if len(contours) > 0:
+        if len(contours) > 0: 
             max_area = max(contours, key=cv2.contourArea)
             epsilon = 0.05 * cv2.arcLength(max_area, True)
             approx = cv2.approxPolyDP(max_area, epsilon, True)
@@ -600,54 +581,52 @@ def edge_angle(color):
             #     approx_sort[0], approx_sort[1] = approx_sort[1], approx_sort[0]
             if len(approx_sort) == 4:
                 bottom_line = (approx_sort[3], approx_sort[2])
-                center_x = (bottom_line[1][0] + bottom_line[0][0]) / 2
-                center_y = (bottom_line[1][1] + bottom_line[0][1]) / 2
+                center_x = (bottom_line[1][0]+bottom_line[0][0])/2
+                center_y = (bottom_line[1][1]+bottom_line[0][1])/2
             else:
                 bottom_line = None
 
         else:
             bottom_line = None
-
+            
         # 初始化
-        L_R_angle = 0
-        blackLine_L = [0, 0]
-        blackLine_R = [0, 0]
+        L_R_angle = 0 
+        blackLine_L = [0,0]
+        blackLine_R = [0,0]
 
         if bottom_line is not None:
             see = True
-            if bottom_line[0][1] - bottom_line[1][1] == 0:
-                angle = 90
+            if bottom_line[0][1] - bottom_line[1][1]==0:
+                angle=90
             else:
-                angle = - math.atan(
-                    (bottom_line[1][1] - bottom_line[0][1]) / (bottom_line[1][0] - bottom_line[0][0])) * 180.0 / math.pi
+                angle = - math.atan((bottom_line[1][1] - bottom_line[0][1]) / (bottom_line[1][0] - bottom_line[0][0]))*180.0/math.pi
             Ycenter = int((bottom_line[1][1] + bottom_line[0][1]) / 2)
             Xcenter = int((bottom_line[1][0] + bottom_line[0][0]) / 2)
             if bottom_line[1][1] > bottom_line[0][1]:
-                blackLine_L = [bottom_line[1][0], bottom_line[1][1]]
-                blackLine_R = [bottom_line[0][0], bottom_line[0][1]]
+                blackLine_L = [bottom_line[1][0] , bottom_line[1][1]]
+                blackLine_R = [bottom_line[0][0] , bottom_line[0][1]]
             else:
-                blackLine_L = [bottom_line[0][0], bottom_line[0][1]]
-                blackLine_R = [bottom_line[1][0], bottom_line[1][1]]
-            cv2.circle(OrgFrame, (Xcenter + x_start, Ycenter), 10, (255, 255, 0), -1)  # 画出中心点
+                blackLine_L =  [bottom_line[0][0] , bottom_line[0][1]]
+                blackLine_R = [bottom_line[1][0] , bottom_line[1][1]]
+            cv2.circle(OrgFrame, (Xcenter + x_start, Ycenter), 10, (255,255,0), -1)#画出中心点
 
             if blackLine_L[0] == blackLine_R[0]:
                 L_R_angle = 0
             else:
-                L_R_angle = (-math.atan(
-                    (blackLine_L[1] - blackLine_R[1]) / (blackLine_L[0] - blackLine_R[0])) * 180.0 / math.pi) - 4
+                L_R_angle =  (-math.atan( (blackLine_L[1]-blackLine_R[1]) / (blackLine_L[0]-blackLine_R[0]) ) *180.0/math.pi)-4
+
+
 
             if img_debug:
+                
                 cv2.circle(OrgFrame, (blackLine_L[0] + x_start, blackLine_L[1]), 5, [0, 255, 255], 2)
                 cv2.circle(OrgFrame, (blackLine_R[0] + x_start, blackLine_R[1]), 5, [255, 0, 255], 2)
-                cv2.line(OrgFrame, (blackLine_R[0] + x_start, blackLine_R[1]),
-                         (blackLine_L[0] + x_start, blackLine_L[1]), (0, 255, 255), thickness=2)
-                cv2.putText(OrgFrame, "L_R_angle:" + str(L_R_angle), (10, OrgFrame.shape[0] - 30),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
-                cv2.putText(OrgFrame, "Xcenter:" + str(Xcenter + x_start), (10, OrgFrame.shape[0] - 50),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
-                cv2.putText(OrgFrame, "Ycenter:" + str(Ycenter), (200, OrgFrame.shape[0] - 50),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
+                cv2.line(OrgFrame, (blackLine_R[0] + x_start,blackLine_R[1]), (blackLine_L[0] + x_start,blackLine_L[1]), (0, 255, 255), thickness=2)
+                cv2.putText(OrgFrame, "L_R_angle:" + str(L_R_angle),(10, OrgFrame.shape[0] - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
+                cv2.putText(OrgFrame, "Xcenter:" + str(Xcenter + x_start),(10, OrgFrame.shape[0] - 50), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
+                cv2.putText(OrgFrame, "Ycenter:" + str(Ycenter),(200, OrgFrame.shape[0] - 50), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
 
+                
                 # cv2.drawContours(frame_mask, cnt_sum, -1, (255, 0, 255), 3)
                 # cv2.imshow('frame_mask', frame_mask)
                 cv2.imshow('black', Imask)
@@ -655,15 +634,15 @@ def edge_angle(color):
                 cv2.waitKey(10)
         else:
             see = False
+            
+        #print(Ycenter)
 
-        # print(Ycenter)
-
-        # 决策执行动作
+     # 决策执行动作
         if step == 1:
             print("653L 向右看 HeadTurn015")
             action_append("HeadTurn015")
             action_append("Stand")
-            time.sleep(1)  # timefftest
+            time.sleep(1)   # timefftest
             step = 2
 
         elif step == 2:
@@ -671,50 +650,49 @@ def edge_angle(color):
                 # cv2.destroyAllWindows()
                 print("662L 右侧看不到边缘 左侧移 Left3move")
                 action_append("Left3move")
-            else:  # 0
+            else:   # 0
                 if L_R_angle > 1.5:
                     if L_R_angle > 7:
                         headTURN += 1
-                        print("668L 左大旋转 turn001L ", L_R_angle)
+                        print("668L 左大旋转 turn001L ",L_R_angle)
                         action_append("turn001L")
 
                     else:
-                        print("672L 左旋转 turn000L ", L_R_angle)
+                        print("672L 左旋转 turn000L ",L_R_angle)
                         headTURN += 1
                         action_append("turn000L")
 
                 elif L_R_angle < -1.5:
                     if L_R_angle < -7:
                         headTURN += 1
-                        print("679L 右大旋转  turn001R ", L_R_angle)
+                        print("679L 右大旋转  turn001R ",L_R_angle)
                         action_append("turn001R")
 
                     else:
-                        print("683L 右旋转  turn000R ", L_R_angle)
+                        print("683L 右旋转  turn000R ",L_R_angle)
                         action_append("turn000R")
 
                 elif Ycenter >= 405:
-                    print("687L 左侧移 Left02move > 365 ", Ycenter)
+                    print("687L 左侧移 Left02move > 365 ",Ycenter)
                     action_append("Left02move")
 
                 elif Ycenter < 380:
-                    print("691L 右侧移 Right02move <400 ", Ycenter)
+                    print("691L 右侧移 Right02move <400 ",Ycenter)
                     action_append("Right02move")
 
                 else:
                     print("695L 角度与位置合适 Stand")
                     action_append("Stand")
                     step = 3
-
-
+                
+                 
         elif step == 3:
             return 1
             break
 
-
-# 根据颜色边缘调整角度与位置（胸部）
+#根据颜色边缘调整角度与位置（胸部）
 def edge_angle_chest(color):
-    global org_img, state, state_sel, step, reset, skip, debug
+    global org_img, state, state_sel, step, reset, skip, debug   
     r_w = chest_r_width
     r_h = chest_r_height
     top_angle = 0
@@ -723,17 +701,17 @@ def edge_angle_chest(color):
     topcenter_y = 0
     bottomcenter_x = 0.5 * r_w
     bottomcenter_y = 0
-    while (True):
+    while(True):
         step = 0
         Corg_img = ChestOrg_img.copy()
         Corg_img = np.rot90(Corg_img)
         OrgFrame = Corg_img.copy()
 
         # 初始化 bottom_right  bottom_left
-        bottom_right = (480, 0)
-        bottom_left = (0, 0)
-        top_right = (480, 0)  # 右上角点坐标
-        top_left = (0, 0)  # 左上角点坐标
+        bottom_right = (480,0)
+        bottom_left =  (0,0)
+        top_right = (480,0)  # 右上角点坐标
+        top_left = (0,0)  # 左上角点坐标
 
         frame = cv2.resize(OrgFrame, (chest_r_width, chest_r_height), interpolation=cv2.INTER_LINEAR)
         frame_copy = frame.copy()
@@ -746,16 +724,16 @@ def edge_angle_chest(color):
         Imask = cv2.dilate(Imask, np.ones((3, 3), np.uint8), iterations=2)
 
         _, cnts, hierarchy = cv2.findContours(Imask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_L1)  # 找出所有轮廓
-
+        
         cnt_sum, area_max = getAreaMaxContour1(cnts)  # 找出最大轮廓
         C_percent = round(area_max * 100 / (r_w * r_h), 2)  # 最大轮廓百分比
         cv2.drawContours(frame, cnt_sum, -1, (255, 0, 255), 3)
 
         if cnt_sum is not None:
             see = True
-            rect = cv2.minAreaRect(cnt_sum)  # 最小外接矩形
-            box = np.int0(cv2.boxPoints(rect))  # 最小外接矩形的四个顶点
-
+            rect = cv2.minAreaRect(cnt_sum)#最小外接矩形
+            box = np.int0(cv2.boxPoints(rect))#最小外接矩形的四个顶点
+            
             bottom_right = cnt_sum[0][0]  # 右下角点坐标
             bottom_left = cnt_sum[0][0]  # 左下角点坐标
             top_right = cnt_sum[0][0]  # 右上角点坐标
@@ -786,46 +764,32 @@ def edge_angle_chest(color):
             topcenter_x = (top_right[0] + top_left[0]) / 2  # 得到top中心坐标
             topcenter_y = (top_left[1] + top_right[1]) / 2
 
-            bottom_angle = -math.atan(
-                (bottom_right[1] - bottom_left[1]) / (bottom_right[0] - bottom_left[0])) * 180.0 / math.pi
-            top_angle = -math.atan((top_right[1] - top_left[1]) / (top_right[0] - top_left[0])) * 180.0 / math.pi
+            bottom_angle =  -math.atan( (bottom_right[1]-bottom_left[1]) / (bottom_right[0]-bottom_left[0]) ) *180.0/math.pi
+            top_angle =  -math.atan( (top_right[1]-top_left[1]) / (top_right[0]-top_left[0]) ) *180.0/math.pi
             if math.fabs(topcenter_x - bottomcenter_x) <= 1:  # 得到连线的角度
                 T_B_angle = 90
             else:
-                T_B_angle = - math.atan(
-                    (topcenter_y - bottomcenter_y) / (topcenter_x - bottomcenter_x)) * 180.0 / math.pi
+                T_B_angle = - math.atan((topcenter_y - bottomcenter_y) / (topcenter_x - bottomcenter_x)) * 180.0 / math.pi
 
             if img_debug:
                 cv2.drawContours(frame_copy, [box], 0, (0, 255, 0), 2)  # 将大矩形画在图上
-                cv2.line(frame_copy, (bottom_left[0], bottom_left[1]), (bottom_right[0], bottom_right[1]),
-                         (255, 255, 0), thickness=2)
-                cv2.line(frame_copy, (top_left[0], top_left[1]), (top_right[0], top_right[1]), (255, 255, 0),
-                         thickness=2)
-                cv2.line(frame_copy, (int(bottomcenter_x), int(bottomcenter_y)), (int(topcenter_x), int(topcenter_y)),
-                         (255, 255, 255), thickness=2)  # T_B_line
+                cv2.line(frame_copy, (bottom_left[0],bottom_left[1]), (bottom_right[0],bottom_right[1]), (255, 255, 0), thickness=2)
+                cv2.line(frame_copy, (top_left[0],top_left[1]), (top_right[0],top_right[1]), (255, 255, 0), thickness=2)
+                cv2.line(frame_copy, (int(bottomcenter_x),int(bottomcenter_y)), (int(topcenter_x),int(topcenter_y)), (255, 255, 255), thickness=2)    # T_B_line
 
-                cv2.putText(frame_copy, "bottom_angle:" + str(bottom_angle), (30, 450), cv2.FONT_HERSHEY_SIMPLEX, 0.65,
-                            (0, 0, 0), 2)  # (0, 0, 255)BGR
-                cv2.putText(frame_copy, "top_angle:" + str(top_angle), (30, 150), cv2.FONT_HERSHEY_SIMPLEX, 0.65,
-                            (0, 0, 0), 2)
-                cv2.putText(frame_copy, "T_B_angle:" + str(T_B_angle), (30, 400), cv2.FONT_HERSHEY_SIMPLEX, 0.65,
-                            (0, 0, 255), 2)
+                cv2.putText(frame_copy, "bottom_angle:" + str(bottom_angle), (30, 450), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 0),2)  # (0, 0, 255)BGR
+                cv2.putText(frame_copy, "top_angle:" + str(top_angle),(30, 150), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 0), 2)
+                cv2.putText(frame_copy, "T_B_angle:" + str(T_B_angle),(30, 400), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
 
-                cv2.putText(frame_copy, "bottomcenter_x:" + str(bottomcenter_x), (30, 480), cv2.FONT_HERSHEY_SIMPLEX,
-                            0.65, (0, 0, 0), 2)  # (0, 0, 255)BGR
-                cv2.putText(frame_copy, "y:" + str(int(bottomcenter_y)), (300, 480), cv2.FONT_HERSHEY_SIMPLEX, 0.65,
-                            (0, 0, 0), 2)  # (0, 0, 255)BGR
+                cv2.putText(frame_copy, "bottomcenter_x:" + str(bottomcenter_x), (30, 480), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 0),2)  # (0, 0, 255)BGR
+                cv2.putText(frame_copy, "y:" + str(int(bottomcenter_y)), (300, 480), cv2.FONT_HERSHEY_SIMPLEX, 0.65,(0, 0, 0), 2)  # (0, 0, 255)BGR
 
-                cv2.putText(frame_copy, "topcenter_x:" + str(topcenter_x), (30, 180), cv2.FONT_HERSHEY_SIMPLEX, 0.65,
-                            (0, 0, 0), 2)  # (0, 0, 255)BGR
-                cv2.putText(frame_copy, "topcenter_y:" + str(int(topcenter_y)), (230, 180), cv2.FONT_HERSHEY_SIMPLEX,
-                            0.65, (0, 0, 0), 2)  # (0, 0, 255)BGR
+                cv2.putText(frame_copy, "topcenter_x:" + str(topcenter_x), (30, 180), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 0),2)  # (0, 0, 255)BGR
+                cv2.putText(frame_copy, "topcenter_y:" + str(int(topcenter_y)), (230, 180), cv2.FONT_HERSHEY_SIMPLEX, 0.65,(0, 0, 0), 2)  # (0, 0, 255)BGR
 
-                cv2.putText(frame_copy, 'C_percent:' + str(C_percent) + '%', (30, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.65,
-                            (0, 0, 0), 2)
-                cv2.putText(frame_copy, "step:" + str(step), (30, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 0),
-                            2)  # (0, 0, 255)BGR
-
+                cv2.putText(frame_copy, 'C_percent:' + str(C_percent) + '%', (30, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 0), 2)
+                cv2.putText(frame_copy, "step:" + str(step), (30, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 0),2)  # (0, 0, 255)BGR
+                
                 cv2.circle(frame_copy, (int(topcenter_x), int(topcenter_y)), 5, [255, 0, 255], 2)
                 cv2.circle(frame_copy, (int(bottomcenter_x), int(bottomcenter_y)), 5, [255, 0, 255], 2)
                 cv2.circle(frame_copy, (top_right[0], top_right[1]), 5, [0, 255, 255], 2)
@@ -833,57 +797,58 @@ def edge_angle_chest(color):
                 cv2.circle(frame_copy, (bottom_right[0], bottom_right[1]), 5, [0, 255, 255], 2)
                 cv2.circle(frame_copy, (bottom_left[0], bottom_left[1]), 5, [0, 255, 255], 2)
                 cv2.imshow('Chest_Camera', frame_copy)  # 显示图像
-                # cv2.imshow('chest_red_mask', Imask)
+                #cv2.imshow('chest_red_mask', Imask)
                 cv2.waitKey(100)
 
         else:
             print("815L  chest NONE")
 
+
+
         # 决策执行动作
         angle_ok_flag = False
 
-        if step == 0:  # 前进依据chest 调整大致位置，方向  看底边线调整角度
-
+        if step == 0:   # 前进依据chest 调整大致位置，方向  看底边线调整角度
+        
             if top_angle > 2:  # 需要左转
                 if top_angle > 6:
-                    print("826L 大左转一下  turn001L ", bottom_angle)
+                    print("826L 大左转一下  turn001L ",bottom_angle)
                     action_append("turn001L")
                 else:
-                    print("829L bottom_angle > 3 需要小左转 turn001L ", bottom_angle)
+                    print("829L bottom_angle > 3 需要小左转 turn001L ",bottom_angle)
                     action_append("turn001L")
             elif top_angle < -2:  # 需要右转
                 if top_angle < -6:
-                    print("833L 右大旋转  turn001R < -6 ", Head_L_R_angle)
+                    print("833L 右大旋转  turn001R < -6 ",Head_L_R_angle)
                     action_append("turn001R")
                 else:
-                    print("836L bottom_angle < -3 需要小右转 turn001R ", bottom_angle)
+                    print("836L bottom_angle < -3 需要小右转 turn001R ",bottom_angle)
                     action_append("turn001R")
             elif -2 <= top_angle <= 2:  # 角度正确
                 print("839L 角度合适")
 
                 if topcenter_x > 250 or topcenter_x < 230:
                     if topcenter_x > 250:
-                        print("843L 微微右移,", topcenter_x)
+                        print("843L 微微右移,",topcenter_x)
                         action_append("Right3move")
                     elif topcenter_x < 230:
-                        print("846L 微微左移,", topcenter_x)
+                        print("846L 微微左移,",topcenter_x)
                         action_append("Left3move")
 
                 else:
                     print("850L 位置合适")
                     break
 
-
-# 找到两个门的轮廓
+#找到两个门的轮廓
 def find_two(list):
     List_new = []
-    a, b = (list[0][0], list[1][0]) if list[0][0] > list[1][0] else (list[1][0], list[0][0])
-    for i in range(2, len(list)):
+    a , b = (list[0][0],list[1][0]) if list[0][0] > list[1][0] else (list[1][0],list[0][0])
+    for i in range(2,len(list)):
         if list[i][0] > list[0][0]:
             b = a
             a = list[i]
         elif list[i][0] > list[1][0]:
-            b = list[i]
+            b =list[i]
     List_new.append(a)
     List_new.append(b)
 
@@ -1331,7 +1296,6 @@ def Greenbridge(colorMask):
             print("--continue---")
             break
 
-
 # ###################### 过            门-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-
 door_flag = True
 Angle = 0
@@ -1349,15 +1313,15 @@ def door_act_move():
     global door_flag
     global real_test
     global camera_choice
-    global Angle, angle_top, Bottom_center_y, Bottom_center_x, Top_center_y, Top_center_x, Top_lenth
-
+    global Angle, angle_top, Bottom_center_y, Bottom_center_x, Top_center_y, Top_center_x, Top_lenth   
+    
     step0_far = 130
     step0_close = 24
     step0_angle_top_R = -8
     step0_angle_top_L = 8
     step0_top_center_x_L = 365
     step0_top_center_x_R = 315
-    step0_delta = 30
+    step0_delta = 30 
     step0_turn_times = 3
 
     step1_angle_top_L = 3
@@ -1408,27 +1372,23 @@ def door_act_move():
 
         elif Top_center_x > step0_top_center_x_L:
             if Top_center_x > step0_top_center_x_L + step0_delta:
-                print("1383L step = 0 站位很偏了， 向右移， Right3move Top_center_x = {} > {}".format(Top_center_x,
-                                                                                            step0_top_center_x_L + step0_delta))
+                print("1383L step = 0 站位很偏了， 向右移， Right3move Top_center_x = {} > {}".format(Top_center_x, step0_top_center_x_L+step0_delta))
                 if real_test:
                     action_append("Right3move")
                     time.sleep(sleep_time_s)
             else:
-                print("1388L step = 0 站位偏了， 向右移， Right2move Top_center_x = {} > {}".format(Top_center_x,
-                                                                                           step0_top_center_x_L))
+                print("1388L step = 0 站位偏了， 向右移， Right2move Top_center_x = {} > {}".format(Top_center_x, step0_top_center_x_L))
                 if real_test:
                     action_append("Right02move")
                     time.sleep(sleep_time_s)
         elif Top_center_x < step0_top_center_x_R:
             if Top_center_x < step0_top_center_x_R - step0_delta:
-                print("1394L step = 0 站位很偏了， 向左移， Left3move Top_center_x = {} < {}".format(Top_center_x,
-                                                                                           step0_top_center_x_R - step0_delta))
+                print("1394L step = 0 站位很偏了， 向左移， Left3move Top_center_x = {} < {}".format(Top_center_x, step0_top_center_x_R - step0_delta))
                 if real_test:
                     action_append("Left3move")
                     time.sleep(sleep_time_s)
             else:
-                print("1399L step = 0 站位偏了， 向左移， Left02move Top_center_x = {} < {}".format(Top_center_x,
-                                                                                           step0_top_center_x_R))
+                print("1399L step = 0 站位偏了， 向左移， Left02move Top_center_x = {} < {}".format(Top_center_x, step0_top_center_x_R))
                 if real_test:
                     action_append("Left02move")
                     time.sleep(sleep_time_s)
@@ -1460,36 +1420,32 @@ def door_act_move():
             if real_test:
                 action_append("turn001R")
                 time.sleep(sleep_time_l)
-        elif angle_top < step1_angle_top_R or -85 < Angle < 0:
+        elif angle_top < step1_angle_top_R or -85 < Angle < 0 :
             print("1432L step = 1 方向偏了， 向左转 turn000L angle_top={} < {}".format(angle_top, step1_angle_top_R))
             if real_test:
                 action_append("turn001L")
                 time.sleep(sleep_time_l)
-
+        
         elif Bottom_center_x < step1_head_bottom_x_F:
             if Bottom_center_x < step1_head_bottom_x_F - step1_delta:
-                print("1439L step = 1 站位很靠前了，向后移 Back2Run Bottom_center_x={} < {}".format(Bottom_center_x,
-                                                                                          step1_head_bottom_x_F - step1_delta))
+                print("1439L step = 1 站位很靠前了，向后移 Back2Run Bottom_center_x={} < {}".format(Bottom_center_x, step1_head_bottom_x_F - step1_delta))
                 if real_test:
                     action_append("Back2Run")
                     time.sleep(sleep_time_s)
             else:
-                print("1444L step = 1 站位靠前了，向后移 Back1Run Bottom_center_x={} < {}".format(Bottom_center_x,
-                                                                                         step1_head_bottom_x_F))
+                print("1444L step = 1 站位靠前了，向后移 Back1Run Bottom_center_x={} < {}".format(Bottom_center_x, step1_head_bottom_x_F))
                 if real_test:
                     action_append("Back1Run")
                     time.sleep(sleep_time_s)
-
+        
         elif Bottom_center_x > step1_head_bottom_x_B:
             if Bottom_center_x > step1_head_bottom_x_B + step1_delta:
-                print("1451L step = 1 站位很靠后了，向前移 Forwalk01 Bottom_center_x={} > {}".format(Bottom_center_x,
-                                                                                           step1_head_bottom_x_B + step1_delta))
+                print("1451L step = 1 站位很靠后了，向前移 Forwalk01 Bottom_center_x={} > {}".format(Bottom_center_x, step1_head_bottom_x_B + step1_delta))
                 if real_test:
                     action_append("Forwalk01")
                     time.sleep(sleep_time_s)
             else:
-                print("1456L step = 1 站位靠后了，向前移 Forwalk01 Bottom_center_x={} > {}".format(Bottom_center_x,
-                                                                                          step1_head_bottom_x_B))
+                print("1456L step = 1 站位靠后了，向前移 Forwalk01 Bottom_center_x={} > {}".format(Bottom_center_x, step1_head_bottom_x_B))
                 if real_test:
                     action_append("Forwalk01")
                     time.sleep(sleep_time_s)
@@ -1499,7 +1455,7 @@ def door_act_move():
             if real_test:
                 action_append("Left3move")
                 time.sleep(sleep_time_l)
-
+        
         elif Bottom_center_y > step1_close:
             print("1468L 已经接近门了，进入下一阶段，摸黑过门, Bottom_center_y = {} > {}".format(Bottom_center_y, step1_close))
             step = 2
@@ -1520,7 +1476,7 @@ def door_act_move():
         for i in range(0, 7):
             if real_test:
                 action_append("Left3move")
-                if i == 3:
+                if i==3:
                     action_append("turn001R")
                     action_append("turn001R")
                 time.sleep(sleep_time_l)
@@ -1535,7 +1491,7 @@ def door_act_move():
                 time.sleep(sleep_time_l)
             action_append("HeadTurnMM")
             action_append("fast_forward_step")
-
+        
         state = -1
 
 
@@ -1547,12 +1503,14 @@ def into_the_door():
     step = 0
     state = 5
 
+
     r_w = chest_r_width
     r_h = chest_r_height
+    
 
     print("/-/-/-/-/-/-/-/-/-开始过门")
 
-    while (state == 5):
+    while(state == 5):
         Area = []
         if camera_choice == "Chest":
             # print("胸部相机")
@@ -1564,15 +1522,16 @@ def into_the_door():
             Img_copy = HeadOrg_img.copy()
             # Img_copy = cv2.resize(border, (r_w, r_h), interpolation=cv2.INTER_CUBIC)
             # Img_copy = Head_OrgFrame
-
+                    
+    
         Frame_gauss = cv2.GaussianBlur(Img_copy, (3, 3), 0)  # 高斯模糊
         Frame_hsv = cv2.cvtColor(Frame_gauss, cv2.COLOR_BGR2HSV)  # 将图片转换到HSV空间
         if camera_choice == "Chest":
             Frame_blue = cv2.inRange(Frame_hsv, color_range['chest_blue_door'][0],
-                                     color_range['chest_blue_door'][1])  # 对原图像和掩模(颜色的字典)进行位运算
+                                        color_range['chest_blue_door'][1])  # 对原图像和掩模(颜色的字典)进行位运算
         elif camera_choice == "Head":
             Frame_blue = cv2.inRange(Frame_hsv, color_range['head_blue_door'][0],
-                                     color_range['head_blue_door'][1])  # 对原图像和掩模(颜色的字典)进行位运算
+                                        color_range['head_blue_door'][1])  # 对原图像和掩模(颜色的字典)进行位运算
         Opened = cv2.morphologyEx(Frame_blue, cv2.MORPH_OPEN, np.ones((1, 1), np.uint8))  # 开运算 去噪点
         Closed = cv2.morphologyEx(Opened, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))  # 闭运算 封闭连接
         Closed = cv2.dilate(Closed, np.ones((5, 5), np.uint8), iterations=3)
@@ -1580,26 +1539,27 @@ def into_the_door():
             cv2.imshow("Imask", Closed)
 
         _, contours, hierarchy = cv2.findContours(Closed, cv2.RETR_LIST,
-                                                  cv2.CHAIN_APPROX_NONE)  # 找出轮廓cv2.CHAIN_APPROX_NONE
+                                                        cv2.CHAIN_APPROX_NONE)  # 找出轮廓cv2.CHAIN_APPROX_NONE
 
         if len(contours) == 0:
             print("没有找到门！")
             door_flag = False
-
+        
         else:
             door_flag = True
-            for i in range(0, len(contours)):
-                # print("len[Chest_contours]={}——i:{}".format(len(Chest_contours), i))
+            for i in range(0,len(contours)):
+                #print("len[Chest_contours]={}——i:{}".format(len(Chest_contours), i))
                 area = cv2.contourArea(contours[i])
                 if 2000 < area < 640 * 480 * 0.45:
-                    Area.append((area, i))
-
+                    Area.append((area,i))
+                
                 # print("area{} = {}".format(i, area))
                 # cv2.imshow("Processed", Img_copy)
                 # cv2.waitKey(0)
             # cv2.drawContours(Img_copy, contours, -1, (0, 0, 255), 1)
 
             AreaMaxContour, Area_max = getAreaMaxContour1(contours)
+
 
             if step != 2 and camera_choice == "Head":
                 Rect = cv2.minAreaRect(AreaMaxContour)
@@ -1638,26 +1598,26 @@ def into_the_door():
                 cv2.circle(Img_copy, (Bottom_center_x, Bottom_center_y), 5, [0, 255, 255], 2)
                 cv2.line(Img_copy, (Top_center_x, Top_center_y),
                          (Bottom_center_x, Bottom_center_y), [0, 255, 255], 2)  # 画出上下中点连线
-
+                
                 if math.fabs(Top_center_x - Bottom_center_x) <= 1:  # 得到连线的角度
                     Angle = 90
                 else:
                     Angle = - math.atan((Top_center_y - Bottom_center_y) / (
                             Top_center_x - Bottom_center_x)) * 180.0 / math.pi
 
+
                 if img_debug:
                     cv2.putText(Img_copy, "angle_top:" + str(int(angle_top)), (30, 425), cv2.FONT_HERSHEY_SIMPLEX, 0.65,
                                 (0, 0, 255), 2)
                     cv2.putText(Img_copy, "Head_bottom_center(x,y): " + str(int(Bottom_center_x)) + " , " + str(
-                        int(Bottom_center_y)), (30, 450), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255),
-                                2)  # (0, 0, 255)BGR
+                    int(Bottom_center_y)), (30, 450), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)  # (0, 0, 255)BGR
                     cv2.putText(Img_copy,
-                                "Head_top_center(x,y): " + str(int(Top_center_x)) + " , " + str(int(Top_center_y)),
-                                (30, 470), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)  # (0, 0, 255)BGR
+                            "Head_top_center(x,y): " + str(int(Top_center_x)) + " , " + str(int(Top_center_y)),
+                            (30, 470), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)  # (0, 0, 255)BGR
                     cv2.putText(Img_copy, "Angle:" + str(int(Angle)), (30, 20), cv2.FONT_HERSHEY_SIMPLEX,
-                                0.65, (0, 0, 255), 2)  # (0, 0, 255)BGR
+                            0.65, (0, 0, 255), 2)  # (0, 0, 255)BGR
                     cv2.putText(Img_copy, "Top_lenth:" + str(int(Top_lenth)), (400, 20), cv2.FONT_HERSHEY_SIMPLEX,
-                                0.65, (0, 0, 255), 2)  # (0, 0, 255)BGR
+                    0.65, (0, 0, 255), 2)  # (0, 0, 255)BGR
 
         if img_debug:
             cv2.imshow("Processed", Img_copy)
@@ -1666,9 +1626,11 @@ def into_the_door():
         door_act_move()
         print("state={}".format(state))
 
+                
+
         # if len(Area) > 2:
         #     Area = find_two(Area)
-
+        
         # elif len(Area) < 2:
         #     door_found = False
         #     print("没有发现门框,调用头部相机")
@@ -1705,6 +1667,7 @@ def into_the_door():
         #     angle_Right = - math.atan(
         #     (Chest_top_left1[1] - Chest_bottom_left1[1]) / (Chest_top_left1[0] - Chest_bottom_left1[0])) * 180.0 / math.pi
 
+
         #     Chest_top_left2 = Chest_contours[Area[1][1]][0][0]
         #     Chest_top_right2 = Chest_contours[Area[1][1]][0][0]
         #     Chest_bottom_left2 = Chest_contours[Area[1][1]][0][0]
@@ -1724,7 +1687,7 @@ def into_the_door():
         #     cv2.circle(Img_copy, (Chest_bottom_left2[0], Chest_bottom_left2[1]), 5, [0, 255, 255], 2)
         #     angle_Left = - math.atan(
         #     (Chest_top_right2[1] - Chest_bottom_right2[1]) / (Chest_top_right2[0] - Chest_bottom_right2[0])) * 180.0 / math.pi
-
+            
         #     Chest_top_center_x = int((Chest_top_right2[0] + Chest_top_left1[0]) / 2)
         #     Chest_top_center_y = int((Chest_top_right2[1] + Chest_top_left1[1]) / 2)
         #     cv2.circle(Img_copy, (Chest_top_center_x, Chest_top_center_y), 5, [0, 255, 255], 2)
@@ -1735,6 +1698,7 @@ def into_the_door():
         #             (0, 0, 255), 2)  # (0, 0, 255)BGR
         #     cv2.putText(Img_copy, "angle_right:" + str(int(angle_Right)), (30, 460), cv2.FONT_HERSHEY_SIMPLEX,
         #             0.65, (0, 0, 255), 2)
+
 
 
 # ###################### 踢            球-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-
@@ -1849,10 +1813,10 @@ def chkCountor(countor,bound,temp,arcs,total_arcs):
     #debug
     # global tot_label
     # tot_label += 1
-
+    
     len_lim = min(min(bound) / 10,100)
     if len(countor) < len_lim: return
-
+    
     #debug
     # nowc = (getran(),getran(),getran())
     # if(tot_label == 370):
@@ -1867,12 +1831,12 @@ def chkCountor(countor,bound,temp,arcs,total_arcs):
     if isArc(countor,centerx,centery,rad):
         result = chk_line(countor,arcs)
         if result < 0.5: return
-
+        
         #debug
         # putlabel(arcs,countor,str(result))
         # drawpoints(arcs,countor,nowc)
         # cv2.circle(arcs,(int(centerx),int(centery)),2,nowc)
-
+        
         total_arcs.append((countor,centerx,centery,rad))
         return rad,centerx,centery
     else: return
@@ -1920,10 +1884,10 @@ def detect(readimg):
     edges = cv2.Canny(img,150,100)
     edges = cv2.morphologyEx(edges,cv2.MORPH_OPEN,kernel=(1,1),iterations=1)
     edges = cv2.adaptiveThreshold(edges,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,21,0)
-
+    
     #debug
     # cv2.imshow("edges",edges)
-
+    
     _, contours, hierarchy= cv2.findContours(edges,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
     temp = readimg.copy()
     arcs = readimg.copy()
@@ -1936,7 +1900,7 @@ def detect(readimg):
     for i in range(len(total_arcs)):
         for j in range(i):
             chkarc(total_arcs[i],total_arcs[j],total_circles)
-
+    
     circle_counts = [0 for x in range(len(total_circles))]
     arc_counts = [0 for x in range(len(total_arcs))]
 
@@ -1981,7 +1945,6 @@ def detect(readimg):
     # cv2.imshow("out",img)
     return chs
 '''
-
 
 ###################################################踢球决策
 def kick_act_move():
@@ -2063,11 +2026,11 @@ def kick_act_move():
                 else:
                     if Chest_ball_y < 370:  # 390 400改成了390 zzx 10.14
                         # X
-                        if Chest_ball_x < 140 * (4 / 3):  # 240 - 100
+                        if Chest_ball_x < 140*(4/3):  # 240 - 100
                             print("2036L step = 0 Chest_ball_x < 180 左侧移 Chest_ball_x={}".format(Chest_ball_x))
                             if real_test:
                                 action_append("Left3move")
-                        elif Chest_ball_x > 340 * (4 / 3):  # 240 + 100
+                        elif Chest_ball_x > 340*(4/3):  # 240 + 100
                             print("2040L step = 0 Chest_ball_x > 300 右侧移 Chest_ball_x={}".format(Chest_ball_x))
                             if real_test:
                                 action_append("Right3move")
@@ -2156,8 +2119,8 @@ def kick_act_move():
         elif step == 4:  # 粗略调整朝向   球与球洞大致在一条线
             # print("调整红球在左脚正前方不远处，看球洞的位置调整")
             if ball_dis_start:
-                if Chest_ball_x <= int(200 * (4 / 3)):
-                    if Chest_ball_x < int(200 * (4 / 3)):
+                if Chest_ball_x <= int(200*(4/3)):
+                    if Chest_ball_x < int(200*(4/3)):
                         print("2199L4 step = 4 需要左侧移 Left3move Chest_ball_x={}".format(Chest_ball_x))
                         if real_test:
                             action_append("Left3move")
@@ -2166,8 +2129,8 @@ def kick_act_move():
                         if real_test:
                             action_append("Left02move")
                     angle_dis_count = 0
-                elif Chest_ball_x > 280 * (4 / 3):
-                    if Chest_ball_x > 280 * (4 / 3):
+                elif Chest_ball_x > 280*(4/3):
+                    if Chest_ball_x > 280*(4/3):
                         print("2209L4 step = 4 需要右侧移 Right3move Chest_ball_x={}".format(Chest_ball_x))
                         if real_test:
                             action_append("Right3move")
@@ -2275,12 +2238,12 @@ def kick_act_move():
             # print("55555 球与球洞都在")
             # print("2310L 调整红球在左脚正前方不远处，看球洞的位置调整")
             if ball_dis_start:  # 390<y<450  230<x<250
-                if Chest_ball_x < 220 * (4 / 3):
+                if Chest_ball_x < 220*(4/3):
                     # if 240 - Chest_ball_x > 40:
                     #     print("2314L 需要左侧移 Left02move")
                     #     action_append("Left02move")
                     # else:
-                    if Chest_ball_x < 210 * (4 / 3):
+                    if Chest_ball_x < 210*(4/3):
                         print("2318L 需要左侧移 Left02move Chest_ball_x={}".format(Chest_ball_x))
                         if real_test:
                             action_append("Left02move")
@@ -2289,12 +2252,12 @@ def kick_act_move():
                         if real_test:
                             action_append("Left1move")
                     angle_dis_count = 0
-                elif Chest_ball_x > 260 * (4 / 3):
+                elif Chest_ball_x > 260*(4/3):
                     # if Chest_ball_x - 240 > 40:
                     #     print("2328L 需要右侧移 Right02move")
                     #     action_append("Right02move")
                     # else:
-                    if Chest_ball_x > 270 * (4 / 3):
+                    if Chest_ball_x > 270*(4/3):
                         print("2332L 需要右侧移 Right02move Chest_ball_x={}".format(Chest_ball_x))
                         if real_test:
                             action_append("Right02move")
@@ -2399,7 +2362,7 @@ def kick_act_move():
                     action_append("forwalkVeryslow")
                     # action_append("turn001R")
 
-            elif hole_x > 250 * (4 / 3):
+            elif hole_x > 250*(4/3):
                 print("step = 6  方向偏左了, 往右转 turn001R hole_x={}".format(hole_x))
                 if real_test:
                     action_append("turn001R")
@@ -2419,8 +2382,8 @@ def kick_act_move():
             #     if real_test:
             #         action_append("turn000R")
 
-            elif Chest_ball_x > 203 * (4 / 3):  # 210
-                if Chest_ball_x > 220 * (4 / 3):
+            elif Chest_ball_x > 203*(4/3):  # 210
+                if Chest_ball_x > 220*(4/3):
                     print("2455L step = 7 向右移动 Right02move Chest_ball_x={} > 200".format(Chest_ball_x))
                     if real_test:
                         action_append("Right02move")
@@ -2430,8 +2393,8 @@ def kick_act_move():
                     if real_test:
                         action_append("Right1move")
                         time.sleep(sleep_time_s)
-            elif Chest_ball_x < 180 * (4 / 3):
-                if Chest_ball_x < 175 * (4 / 3):
+            elif Chest_ball_x < 180*(4/3):
+                if Chest_ball_x < 175*(4/3):
                     print("2466L step = 7 向左移动 Left02move Chest_ball_x={} < 175".format(Chest_ball_x))
                     if real_test:
                         action_append("Left02move")
@@ -2531,7 +2494,7 @@ def kick_act_move():
             print("完成！ 77777")
             state = -1
             step = 10
-
+ 
 
 def kick_ball():
     global state, state_sel, step, reset, skip
@@ -2568,7 +2531,7 @@ def kick_ball():
             # 开始处理图像
             Hole_hsv = cv2.cvtColor(Hole_OrgFrame, cv2.COLOR_BGR2HSV)
 
-            Hole_Imask = cv2.inRange(Hole_hsv, color_range['blue_hole'][0], color_range['blue_hole'][1])  # 识别到洞
+            Hole_Imask = cv2.inRange(Hole_hsv, color_range['blue_hole'][0], color_range['blue_hole'][1])    # 识别到洞
             Hole_Imask = cv2.dilate(Hole_Imask, np.ones((5, 5), np.uint8), iterations=3)
             Hole_Imask = cv2.erode(Hole_Imask, np.ones((3, 3), np.uint8), iterations=3)
 
@@ -2604,11 +2567,11 @@ def kick_ball():
                 #     cv2.putText(Hole_OrgFrame, "area:" + str(area), (10, Hole_OrgFrame.shape[0] - 55),
                 #                 cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 1)
                 if 640 * 480 * 0.0033 < area < 640 * 480 * 0.45:  # 去掉很小的干扰轮廓以及最大的图像边界
-                    e = cv2.fitEllipse(cnts[i])  # 拟合椭圆，获得ellipse =  [ (x, y) , (a, b), angle ]。（x, y）代表椭圆中心点的位置；
-                    # （a, b）代表长短轴长度，应注意a、b为长短轴的直径，而非半径；angle 代表了中心旋转的角度
+                    e = cv2.fitEllipse(cnts[i])     # 拟合椭圆，获得ellipse =  [ (x, y) , (a, b), angle ]。（x, y）代表椭圆中心点的位置；
+                                                    # （a, b）代表长短轴长度，应注意a、b为长短轴的直径，而非半径；angle 代表了中心旋转的角度
                     area2 = np.pi * e[1][0] * e[1][1]
                     # print("ratio:{}".format(area/area2))
-                    if area / area2 > 0.05 and np.abs(90 - e[2]) < 90:  # 不太懂这个判断条件的意义
+                    if area / area2 > 0.05 and np.abs(90 - e[2]) < 90:      # 不太懂这个判断条件的意义
                         if temp < e[0][1]:
                             temp = e[0][1]
                             temp_e = e
@@ -2657,7 +2620,7 @@ def kick_ball():
             Chest_ball_x = 0
             Chest_ball_y = 0
             # 模板匹配，远距离靠近
-            if step == -2:  # 该部分没有办法进入
+            if step == -2:      # 该部分没有办法进入
                 template = cv2.imread('//home//pi//RunningRobot_test//template.jpg')
                 w = template.shape[0]
                 h = template.shape[1]
@@ -2678,6 +2641,7 @@ def kick_ball():
                 else:
                     e_kernelSize = 5
 
+
                 Chest_Ball_hsv = cv2.cvtColor(Ball_OrgFrame, cv2.COLOR_BGR2HSV)
                 # Chest_Ball_hsv = cv2.GaussianBlur(Chest_Ball_hsv, (3, 3), 0)
 
@@ -2686,12 +2650,9 @@ def kick_ball():
                 # Chest_Ball_Imask_2 = cv2.inRange(Chest_Ball_hsv, color_range['d_red_ball_floor2'][0],
                 #                                  color_range['d_red_ball_floor2'][1])
                 # Chest_Ball_Imask = cv2.bitwise_or(Chest_Ball_Imask_1, Chest_Ball_Imask_2)
-                Chest_Ball_Imask = cv2.inRange(Chest_Ball_hsv, color_range['kick_ball_rec'][0],
-                                               color_range['kick_ball_rec'][1])
-                Chest_Ball_Imask = cv2.erode(Chest_Ball_Imask, np.ones((e_kernelSize, e_kernelSize), np.uint8),
-                                             iterations=2)
-                Chest_Ball_Imask = cv2.morphologyEx(Chest_Ball_Imask, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8),
-                                                    iterations=1)
+                Chest_Ball_Imask = cv2.inRange(Chest_Ball_hsv,color_range['kick_ball_rec'][0],color_range['kick_ball_rec'][1])
+                Chest_Ball_Imask = cv2.erode(Chest_Ball_Imask, np.ones((e_kernelSize, e_kernelSize), np.uint8), iterations=2)
+                Chest_Ball_Imask = cv2.morphologyEx(Chest_Ball_Imask, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8),iterations=1)
 
                 # cv2.imshow("red_floor_INV", Chest_Ball_Imask)
                 # cv2.waitKey(0)
@@ -2720,9 +2681,8 @@ def kick_ball():
                                 # print("ratio:{}".format(area/area2))
                                 bias = abs(1 - e[1][0] / e[1][1])
                                 # cv2.waitKey(0)
-                                if ((step < 4 and area / area2 > 0.05 and 290 < e[0][1] < 550) or (
-                                        step >= 4 and 400 < e[0][1] < 550)) and \
-                                        (e[1][1] / e[1][0] < 2.3):
+                                if ((step < 4 and area / area2 > 0.05 and 290 < e[0][1] < 550) or (step >= 4 and 400 < e[0][1] < 550)) and \
+                                        (e[1][1]/e[1][0] < 2.3):
                                     if temp_b > bias:
                                         temp_b = bias
                                         temp_b_e = e
@@ -2811,7 +2771,7 @@ def baffle():
     dis_flag = False
     angle_flag = False
     center_x = 0
-    while (1):
+    while(1):
         if True:
             Corg_img = ChestOrg_img.copy()
             Corg_img = np.rot90(Corg_img)
@@ -2821,7 +2781,7 @@ def baffle():
             frame = Corg_img.copy()
             center = []
 
-            # 开始处理图像
+    # 开始处理图像
             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
             hsv = cv2.GaussianBlur(hsv, (3, 3), 0)
             Imask = cv2.inRange(hsv, color_range['blue_baf'][0], color_range['blue_baf'][1])
@@ -2831,10 +2791,10 @@ def baffle():
             _, cnts, hieracy = cv2.findContours(Imask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_L1)  # 找出所有轮廓
             # print("cnts len:",len(cnts))
             if cnts is not None:
-                cnt_large, cnt_area = getAreaMaxContour1(cnts)
+                cnt_large , cnt_area = getAreaMaxContour1(cnts)
 
-                # print(cnt_area)
-
+                #print(cnt_area)
+        
             else:
                 print("2984L cnt_large is None")
                 continue
@@ -2843,7 +2803,7 @@ def baffle():
             if cnt_large is not None:
                 rect = cv2.minAreaRect(cnt_large)  # 最小外接矩形
                 box = np.int0(cv2.boxPoints(rect))  # 最小外接矩形的四个顶点
-
+                
                 Ax = box[0, 0]
                 Ay = box[0, 1]
                 Bx = box[1, 0]
@@ -2860,31 +2820,29 @@ def baffle():
                 cv2.drawContours(OrgFrame, [box], -1, [0, 0, 255, 255], 3)
                 cv2.circle(OrgFrame, (center_x, center_y), 10, (0, 0, 255), -1)  # 画出中心点
                 # 求得大矩形的旋转角度，if条件是为了判断长的一条边的旋转角度，因为box存储的点的顺序不确定\
-                if math.sqrt(math.pow(box[3, 1] - box[0, 1], 2) + math.pow(box[3, 0] - box[0, 0], 2)) > math.sqrt(
-                        math.pow(box[3, 1] - box[2, 1], 2) + math.pow(box[3, 0] - box[2, 0], 2)):
+                if math.sqrt(math.pow(box[3, 1] - box[0, 1], 2) + math.pow(box[3, 0] - box[0, 0], 2)) > math.sqrt(math.pow(box[3, 1] - box[2, 1], 2) + math.pow(box[3, 0] - box[2, 0], 2)):
                     baffle_angle = - math.atan((box[3, 1] - box[0, 1]) / (box[3, 0] - box[0, 0])) * 180.0 / math.pi
                 else:
-                    baffle_angle = - math.atan(
-                        (box[3, 1] - box[2, 1]) / (box[3, 0] - box[2, 0])) * 180.0 / math.pi  # 负号是因为坐标原点的问题
+                    baffle_angle = - math.atan( (box[3, 1] - box[2, 1]) / (box[3, 0] - box[2, 0]) ) * 180.0 / math.pi  # 负号是因为坐标原点的问题
                 if center_y > blue_bottom_Y:
                     blue_bottom_Y = center_y
             baffle_dis_Y = blue_bottom_Y
-            baffle_dis_X = center_x
+            baffle_dis_X = center_x 
             if baffle_dis_Y > 240:
                 baffle_dis_Y_flag = True
+
 
             if img_debug:
                 cv2.putText(OrgFrame, "baffle_dis_Y:" + str(baffle_dis_Y),
                             (10, OrgFrame.shape[0] - 35), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
-
+            
                 cv2.putText(OrgFrame, "baffle_dis_Y_flag:" + str(baffle_dis_Y_flag),
                             (10, OrgFrame.shape[0] - 55), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
-
+            
                 cv2.putText(OrgFrame, "baffle_angle:" + str(baffle_angle),
                             (10, OrgFrame.shape[0] - 75), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
-                cv2.putText(OrgFrame, "step:" + str(step), (30, OrgFrame.shape[0] - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.65,
-                            (0, 0, 0), 2)  # (0, 0, 255)BGR
-
+                cv2.putText(OrgFrame, "step:" + str(step), (30, OrgFrame.shape[0] - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 0),2)  # (0, 0, 255)BGR
+                            
                 cv2.imshow('OrgFrame', OrgFrame)
                 k = cv2.waitKey(10)
                 if k == 27:
@@ -2893,36 +2851,37 @@ def baffle():
                     break
                 elif k == ord('s'):
                     print("save picture123")
-                    cv2.imwrite("picture123.jpg", org_img)  # 保存图片
+                    cv2.imwrite("picture123.jpg",org_img) #保存图片
 
-            # 决策执行动作
+            
+    # 决策执行动作
             if step == 0:
                 if baffle_dis_Y <= 250:
                     print("3045L 大步前进 Forwalk02")
                     action_append("Forwalk02")
                 elif baffle_dis_Y > 250:
-                    step = 1
+                    step=1
 
 
-            elif step == 1:  # 调整角度 -5 ~ 5
+            elif step==1:   # 调整角度 -5 ~ 5
                 if baffle_angle > 5:
                     if baffle_angle > 8:
-                        print("3054L 大左转一下  turn001L  baffle_angle:", baffle_angle)
+                        print("3054L 大左转一下  turn001L  baffle_angle:",baffle_angle)
                         action_append("turn001L")
                     else:
-                        print("3057L 左转 turn000L  baffle_angle:", baffle_angle)
+                        print("3057L 左转 turn000L  baffle_angle:",baffle_angle)
                         action_append("turn000L")
                 elif baffle_angle < -5:
                     if baffle_angle < -8:
-                        print("3061L 大右转一下  turn001R  baffle_angle:", baffle_angle)
+                        print("3061L 大右转一下  turn001R  baffle_angle:",baffle_angle)
                         action_append("turn001R")
                     else:
-                        print("3064L 右转 turn000R  baffle_angle:", baffle_angle)
+                        print("3064L 右转 turn000R  baffle_angle:",baffle_angle)
                         action_append("turn000R")
                 else:
-                    step = 2
-
-            elif step == 2:  # 调整前进位置  调整左右位置
+                    step=2
+                
+            elif step == 2:     # 调整前进位置  调整左右位置
                 if baffle_dis_Y < 390:
                     print("3071L 大一步前进 forwardSlow0403")
                     action_append("forwardSlow0403")
@@ -2931,24 +2890,24 @@ def baffle():
                     action_append("Forwalk00")
                 elif 460 < baffle_dis_Y:
                     step = 3
-            elif step == 3:  # 调整角度
+            elif step == 3: # 调整角度
                 if baffle_angle > 2:
                     if baffle_angle > 5:
-                        print("3081L 大左转一下  turn001L ", baffle_angle)
+                        print("3081L 大左转一下  turn001L ",baffle_angle)
                         action_append("turn001L")
                     else:
                         print("3084L 左转 turn001L")
                         action_append("turn001L")
                 elif baffle_angle < -2:
                     if baffle_angle < -5:
-                        print("3088L 大右转一下  turn001R ", baffle_angle)
+                        print("3088L 大右转一下  turn001R ",baffle_angle)
                         action_append("turn001R")
                     else:
-                        print("3091L 右转 turn001R ", baffle_angle)
+                        print("3091L 右转 turn001R ",baffle_angle)
                         action_append("turn001R")
                 elif baffle_dis_Y_flag:
                     step = 4
-            elif step == 4:  # 跨栏后调整方向
+            elif step == 4: # 跨栏后调整方向
 
                 print("3097L 前挪一点点")
                 print("3098L 翻栏杆 翻栏杆 RollRail")
@@ -2958,8 +2917,9 @@ def baffle():
                 action_append("Stand")
                 action_append("RollRail")
                 action_append("Stand")
-                # print("step step step 444 ")
-
+                #print("step step step 444 ")
+                
+                
                 action_append("turn004L")
                 action_append("turn004L")
                 action_append("turn004L")
@@ -2967,20 +2927,20 @@ def baffle():
                 action_append("Back2Run")
                 # action_append("turn004L")
                 # action_append("turn004L")
-
+                
                 break
 
 
 ###################### 过            坑-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-
 def hole_edge(color):
-    edge_angle_chest(color)  # 调整好角度与距离
-    while (1):
+    edge_angle_chest(color)#调整好角度与距离
+    while(1):
         Area = 0
         src = ChestOrg_img.copy()
         src = np.rot90(src)
         src = src.copy()
         # cv2.imshow("src1",src)
-        src = src[int(100):int(400), int(50):int(500)]
+        src = src[int(100):int(400),int(50):int(500)]
         src_copy = src
         # cv2.imshow("src2",src)
         src = cv2.GaussianBlur(src, (5, 5), 0)
@@ -2988,6 +2948,7 @@ def hole_edge(color):
         # cv2.imshow("hsv",hsv_img)
         mask = cv2.inRange(hsv_img, color_range[color][0], color_range[color][1])
         # cv2.imshow("mask",mask)
+
 
         mask2 = cv2.erode(mask, None, iterations=5)
         mask1 = cv2.dilate(mask2, None, iterations=8)
@@ -3005,16 +2966,15 @@ def hole_edge(color):
         else:
             print("已近迈进，正式进入过坑阶段")
             action_append("Stand")
-            if color == 'blue_hole_chest':
+            if  color == 'blue_hole_chest':
                 hole_edge_main('blue_hole_head')
                 break
             elif color == 'green_hole_chest':
                 hole_edge_main('green_hole_head')
                 break
-
-
+        
 def hole_edge_main(color):
-    global HeadOrg_img, chest_copy, reset, skip, handling
+    global HeadOrg_img,chest_copy, reset, skip,handling
     global handling
     angle_ok_flag = False
     angle = 90
@@ -3038,7 +2998,7 @@ def hole_edge_main(color):
         # 获取图像中心点坐标x, y
         center = []
         # 开始处理图像
-
+     
         hsv = cv2.cvtColor(frame_mask, cv2.COLOR_BGR2HSV)
         hsv = cv2.GaussianBlur(hsv, (3, 3), 0)
         Imask = cv2.inRange(hsv, color_range[color][0], color_range[color][1])
@@ -3050,7 +3010,7 @@ def hole_edge_main(color):
         # cv2.imshow("opened",Imask)
         # print("len:",len(cnts))
 
-        if len(contours) > 0:
+        if len(contours) > 0: 
             max_area = max(contours, key=cv2.contourArea)
             epsilon = 0.05 * cv2.arcLength(max_area, True)
             approx = cv2.approxPolyDP(max_area, epsilon, True)
@@ -3063,53 +3023,50 @@ def hole_edge_main(color):
             #     approx_sort[0], approx_sort[1] = approx_sort[1], approx_sort[0]
             if len(approx_sort) == 4:
                 bottom_line = (approx_sort[3], approx_sort[2])
-                center_x = (bottom_line[1][0] + bottom_line[0][0]) / 2
-                center_y = (bottom_line[1][1] + bottom_line[0][1]) / 2
+                center_x = (bottom_line[1][0]+bottom_line[0][0])/2
+                center_y = (bottom_line[1][1]+bottom_line[0][1])/2
             else:
                 bottom_line = None
 
         else:
             bottom_line = None
-
+            
         # 初始化
-        L_R_angle = 0
-        blackLine_L = [0, 0]
-        blackLine_R = [0, 0]
+        L_R_angle = 0 
+        blackLine_L = [0,0]
+        blackLine_R = [0,0]
 
         if bottom_line is not None:
             see = True
-            if bottom_line[0][1] - bottom_line[1][1] == 0:
-                angle = 90
+            if bottom_line[0][1] - bottom_line[1][1]==0:
+                angle=90
             else:
-                angle = - math.atan(
-                    (bottom_line[1][1] - bottom_line[0][1]) / (bottom_line[1][0] - bottom_line[0][0])) * 180.0 / math.pi
+                angle = - math.atan((bottom_line[1][1] - bottom_line[0][1]) / (bottom_line[1][0] - bottom_line[0][0]))*180.0/math.pi
             Ycenter = int((bottom_line[1][1] + bottom_line[0][1]) / 2)
             Xcenter = int((bottom_line[1][0] + bottom_line[0][0]) / 2)
             if bottom_line[1][1] > bottom_line[0][1]:
-                blackLine_L = [bottom_line[1][0], bottom_line[1][1]]
-                blackLine_R = [bottom_line[0][0], bottom_line[0][1]]
+                blackLine_L = [bottom_line[1][0] , bottom_line[1][1]]
+                blackLine_R = [bottom_line[0][0] , bottom_line[0][1]]
             else:
-                blackLine_L = [bottom_line[0][0], bottom_line[0][1]]
-                blackLine_R = [bottom_line[1][0], bottom_line[1][1]]
-            cv2.circle(OrgFrame, (Xcenter + x_start, Ycenter), 10, (255, 255, 0), -1)  # 画出中心点
+                blackLine_L =  [bottom_line[0][0] , bottom_line[0][1]]
+                blackLine_R = [bottom_line[1][0] , bottom_line[1][1]]
+            cv2.circle(OrgFrame, (Xcenter + x_start, Ycenter), 10, (255,255,0), -1)#画出中心点
 
             if blackLine_L[0] == blackLine_R[0]:
                 L_R_angle = 0
             else:
-                L_R_angle = (-math.atan(
-                    (blackLine_L[1] - blackLine_R[1]) / (blackLine_L[0] - blackLine_R[0])) * 180.0 / math.pi) + 4
+                L_R_angle =  (-math.atan( (blackLine_L[1]-blackLine_R[1]) / (blackLine_L[0]-blackLine_R[0]) ) *180.0/math.pi)+4
+
+
 
             if img_debug:
+                
                 cv2.circle(OrgFrame, (blackLine_L[0] + x_start, blackLine_L[1]), 5, [0, 255, 255], 2)
                 cv2.circle(OrgFrame, (blackLine_R[0] + x_start, blackLine_R[1]), 5, [255, 0, 255], 2)
-                cv2.line(OrgFrame, (blackLine_R[0] + x_start, blackLine_R[1]),
-                         (blackLine_L[0] + x_start, blackLine_L[1]), (0, 255, 255), thickness=2)
-                cv2.putText(OrgFrame, "L_R_angle:" + str(L_R_angle), (10, OrgFrame.shape[0] - 30),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
-                cv2.putText(OrgFrame, "Xcenter:" + str(Xcenter + x_start), (10, OrgFrame.shape[0] - 50),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
-                cv2.putText(OrgFrame, "Ycenter:" + str(Ycenter), (200, OrgFrame.shape[0] - 50),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
+                cv2.line(OrgFrame, (blackLine_R[0] + x_start,blackLine_R[1]), (blackLine_L[0] + x_start,blackLine_L[1]), (0, 255, 255), thickness=2)
+                cv2.putText(OrgFrame, "L_R_angle:" + str(L_R_angle),(10, OrgFrame.shape[0] - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
+                cv2.putText(OrgFrame, "Xcenter:" + str(Xcenter + x_start),(10, OrgFrame.shape[0] - 50), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
+                cv2.putText(OrgFrame, "Ycenter:" + str(Ycenter),(200, OrgFrame.shape[0] - 50), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
 
                 # cv2.drawContours(frame_mask, cnt_sum, -1, (255, 0, 255), 3)
                 cv2.imshow('frame_mask', frame_mask)
@@ -3118,53 +3075,55 @@ def hole_edge_main(color):
                 cv2.waitKey(10)
         else:
             see = False
+            
+        #print(Ycenter)
 
-        # print(Ycenter)
-
-        # 决策执行动作
+     # 决策执行动作
         if step == 1:
             print("3266L 向右看 HeadTurn015")
             action_append("HeadTurn015")
-            time.sleep(1)  # timefftest
+            time.sleep(1)   # timefftest
             step = 2
         elif step == 2:
             if not see:  # not see the edge
                 # cv2.destroyAllWindows()
                 print("3273L 右侧看不到边缘 左侧移 Left3move")
                 action_append("Left3move")
-            else:  # 0
+            else:   # 0
                 if L_R_angle > 1.5:
                     if L_R_angle > 7:
                         headTURN += 1
-                        print("3279L 左da旋转 turn001L ", L_R_angle)
+                        print("3279L 左da旋转 turn001L ",L_R_angle)
                         action_append("turn001L")
 
                     else:
-                        print("3283L 左旋转 turn000L ", L_R_angle)
+                        print("3283L 左旋转 turn000L ",L_R_angle)
                         headTURN += 1
                         action_append("turn000L")
 
+                    
                     # time.sleep(1)   # timefftest
                 elif L_R_angle < -1.5:
                     if L_R_angle < -7:
                         headTURN += 1
-                        print("3292L 右da旋转  turn001R ", L_R_angle)
+                        print("3292L 右da旋转  turn001R ",L_R_angle)
                         action_append("turn001R")
 
                     else:
-                        print("3296L 右旋转  turn000R ", L_R_angle)
+                        print("3296L 右旋转  turn000R ",L_R_angle)
                         action_append("turn000R")
 
+                    
                     # time.sleep(1)   # timefftest
                 elif Ycenter >= 365:
                     if Ycenter > 390:
-                        print("3303L 左da侧移 Left3move >440 ", Ycenter)
+                        print("3303L 左da侧移 Left3move >440 ",Ycenter)
                         action_append("Left3move")
                     else:
-                        print("3306L 左侧移 Left02move > 365 ", Ycenter)
+                        print("3306L 左侧移 Left02move > 365 ",Ycenter)
                         action_append("Left02move")
                 elif Ycenter < 355:
-                    print("3309L 右侧移 Right02move <400 ", Ycenter)
+                    print("3309L 右侧移 Right02move <400 ",Ycenter)
                     action_append("Right02move")
                 else:
                     print("3312L 右看 X位置ok")
@@ -3172,40 +3131,40 @@ def hole_edge_main(color):
                     # action_append("Left02move")
                     print("向前一步")
                     action_append("forwardSlow0403")
-                    # action_append("forwardSlow0403")
+                    # action_append("forwardSlow0403")  
                     # action_append("forwardSlow0403")
                     action_append("Stand")
                     step = 3
-                    # cv2.destroyAllWindows()
-
+                    #cv2.destroyAllWindows()
+                 
 
         elif step == 3:
             if not see:  # not see the edge
                 # cv2.destroyAllWindows()
                 print("3327L 右侧看不到边缘 左侧移 Left3move")
                 step == 5
-            else:  # 0
+            else:   # 0
                 if L_R_angle > 2:
                     if L_R_angle > 7:
-                        print("3332L 左旋转 turn001L ", L_R_angle)
+                        print("3332L 左旋转 turn001L ",L_R_angle)
                         action_append("turn001L")
                     else:
-                        print("3335L 左旋转 turn000L ", L_R_angle)
+                        print("3335L 左旋转 turn000L ",L_R_angle)
                         action_append("turn000L")
-
+                    
                     # time.sleep(1)   # timefftest
                 elif L_R_angle < -2:
                     if L_R_angle < -7:
-                        print("3341L 右旋转  turn001R ", L_R_angle)
+                        print("3341L 右旋转  turn001R ",L_R_angle)
                         action_append("turn001R")
                     else:
-                        print("3344L 右旋转  turn000R ", L_R_angle)
+                        print("3344L 右旋转  turn000R ",L_R_angle)
                         action_append("turn000R")
                     # time.sleep(1)   # timefftest
                 else:
                     print("666L 右看 X位置ok")
                     step = 4
-
+        
         elif step == 4:
             print("3352L 右侧看到绿色边缘 右侧移 Right3move")
             action_append("Right3move")
@@ -3220,60 +3179,59 @@ def hole_edge_main(color):
             break
 
 
+
 ###################### 过   地   雷   区-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-
-def angle_adjust():  # 调整角度，确保始终朝前
-    global baffle_angle, Bbox_centerY
+def angle_adjust():#调整角度，确保始终朝前
+    global baffle_angle,Bbox_centerY
     if Bbox_centerY > 250:
         if baffle_angle > 2:
             if baffle_angle > 5:
-                print("朝前 大左转一下  turn001L ", baffle_angle)
+                print("朝前 大左转一下  turn001L ",baffle_angle)
                 action_append("turn001L")
             else:
                 print("朝前 左转 turn001L")
                 action_append("turn001L")
         elif baffle_angle < -2:
             if baffle_angle < -5:
-                print("朝前 大右转一下  turn001R ", baffle_angle)
+                print("朝前 大右转一下  turn001R ",baffle_angle)
                 action_append("turn001R")
             else:
-                print("朝前 右转 turn001R ", baffle_angle)
+                print("朝前 右转 turn001R ",baffle_angle)
                 action_append("turn001R")
     else:
-        pass
-
-
+         pass
+        
 Bbox_centerY = 0
-
-
 def obstacle():
     global HeadOrg_img, step
-    global Head_L_R_angle, Bbox_centerY, blue_rail
-
+    global Head_L_R_angle,Bbox_centerY,blue_rail
+    
     print("/-/-/-/-/-/-/-/-/-进入obscle")
     step = 1
     k = 1
     blue_rail = False
 
-    while (1):
-        if True:
+    while(1):
+        if True:    
             if ChestOrg_img is None:
                 continue
             Corg_img = ChestOrg_img.copy()
             Corg_img = np.rot90(Corg_img)
-            # Corg_img = Corg_img[int(200):int(400),int(100):int(500)]
+            #Corg_img = Corg_img[int(200):int(400),int(100):int(500)]
             Corg_img = Corg_img.copy()
             hsv = cv2.cvtColor(Corg_img, cv2.COLOR_BGR2HSV)
             hsv = cv2.GaussianBlur(hsv, (3, 3), 0)
 
-            # blue 分析图像 决策执行
-            Bumask = cv2.inRange(hsv, color_dist['blue'][0], color_dist['blue'][1])
+
+         # blue 分析图像 决策执行
+            Bumask = cv2.inRange(hsv,color_dist['blue'][0],color_dist['blue'][1])
             Bumask = cv2.erode(Bumask, None, iterations=2)
             Bumask = cv2.dilate(Bumask, np.ones((3, 3), np.uint8), iterations=2)
             # cv2.imshow('Bluemask', Bumask)
             _, cntsblue, hierarchy = cv2.findContours(Bumask, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)  # 找出轮廓
-
+            
             if cntsblue is not None:
-                cnt_large = getAreaMaxContour2(cntsblue)  # 取最大轮廓
+                cnt_large = getAreaMaxContour2(cntsblue)    # 取最大轮廓
             else:
                 print("1135L cnt_large is None")
                 continue
@@ -3281,102 +3239,96 @@ def obstacle():
             if cnt_large is not None:
                 rect_blue = cv2.minAreaRect(cnt_large)
                 box_blue = np.int0(cv2.boxPoints(rect_blue))  # 点的坐标
-                Bbox_centerX = int((box_blue[3, 0] + box_blue[2, 0] + box_blue[1, 0] + box_blue[0, 0]) / 4)
-                Bbox_centerY = int((box_blue[3, 1] + box_blue[2, 1] + box_blue[1, 1] + box_blue[0, 1]) / 4)
-                Bbox_center = [Bbox_centerX, Bbox_centerY]
-                cv2.circle(Corg_img, (Bbox_center[0], Bbox_center[1]), 7, (0, 0, 255), -1)  # 圆点标记
+                Bbox_centerX = int((box_blue[3,0] + box_blue[2,0] + box_blue[1,0] + box_blue[0,0])/4)
+                Bbox_centerY = int((box_blue[3,1] + box_blue[2,1] + box_blue[1,1] + box_blue[0,1])/4)
+                Bbox_center = [Bbox_centerX,Bbox_centerY]
+                cv2.circle(Corg_img, (Bbox_center[0],Bbox_center[1]), 7, (0, 0, 255), -1) # 圆点标记
 
-                cv2.drawContours(Corg_img, [box_blue], -1, (255, 0, 0), 3)
-                if math.sqrt(math.pow(box_blue[3, 1] - box_blue[0, 1], 2) + math.pow(box_blue[3, 0] - box_blue[0, 0],
-                                                                                     2)) > math.sqrt(
-                        math.pow(box_blue[3, 1] - box_blue[2, 1], 2) + math.pow(box_blue[3, 0] - box_blue[2, 0], 2)):
-                    baffle_angle = - math.atan(
-                        (box_blue[3, 1] - box_blue[0, 1]) / (box_blue[3, 0] - box_blue[0, 0])) * 180.0 / math.pi
+                cv2.drawContours(Corg_img, [box_blue], -1, (255,0,0), 3)
+                if math.sqrt(math.pow(box_blue[3, 1] - box_blue[0, 1], 2) + math.pow(box_blue[3, 0] - box_blue[0, 0], 2)) > math.sqrt(math.pow(box_blue[3, 1] - box_blue[2, 1], 2) + math.pow(box_blue[3, 0] - box_blue[2, 0], 2)):
+                    baffle_angle = - math.atan((box_blue[3, 1] - box_blue[0, 1]) / (box_blue[3, 0] - box_blue[0, 0])) * 180.0 / math.pi
                 else:
-                    baffle_angle = - math.atan((box_blue[3, 1] - box_blue[2, 1]) / (
-                                box_blue[3, 0] - box_blue[2, 0])) * 180.0 / math.pi  # 负号是因为坐标原点的问题
+                    baffle_angle = - math.atan( (box_blue[3, 1] - box_blue[2, 1]) / (box_blue[3, 0] - box_blue[2, 0]) ) * 180.0 / math.pi  # 负号是因为坐标原点的问题
                 obscle_area_blue = 0
                 # 当遇到蓝色门槛时停止
                 for c in cntsblue:
                     obscle_area_blue += math.fabs(cv2.contourArea(c))
-                if Bbox_centerY >= 280 and obscle_area_blue > 0.05 * 640 * 480:  # and go_up: # 320  obscle_area_blue > 0.05 * 640 * 480 and
+                if  Bbox_centerY >= 280 and obscle_area_blue > 0.05 * 640 * 480 :   # and go_up: # 320  obscle_area_blue > 0.05 * 640 * 480 and
 
                     if img_debug:
                         cv2.imshow('Corg_img', Corg_img)
                         cv2.waitKey(10)
-                    print("遇到蓝色门槛-----*-----*-----*-----* Bbox_center Y:", Bbox_centerY)
+                    print("遇到蓝色门槛-----*-----*-----*-----* Bbox_center Y:",Bbox_centerY)
                     action_append("Stand")
                     blue_rail = True
+                    
 
                     cv2.destroyAllWindows()
                     break
 
-            # black 分析图像 决策执行
-            Imask = cv2.inRange(hsv, color_range['black_dir'][0], color_range['black_dir'][1])  # 黑色地雷
+         # black 分析图像 决策执行
+            Imask = cv2.inRange(hsv, color_range['black_dir'][0], color_range['black_dir'][1])#黑色地雷
             Imask = cv2.erode(Imask, None, iterations=3)
             Imask = cv2.dilate(Imask, np.ones((3, 3), np.uint8), iterations=2)
-            # cv2.imshow('black', Imask)
+            #cv2.imshow('black', Imask)
             _, contours, hierarchy = cv2.findContours(Imask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_L1)  # 找出所有轮廓
             cv2.drawContours(Corg_img, contours, -1, (255, 0, 255), 2)
 
-            left_point = [640, 0]
-            right_point = [0, 0]
 
+            left_point = [640,0]
+            right_point = [0,0]
+
+            
             if len(contours) != 0:
 
-                Big_battle = [0, 0]
+                Big_battle = [0,0]
 
                 for c in contours:
                     rect = cv2.minAreaRect(c)  # 最小外接矩形
-                    box = cv2.boxPoints(rect)  # 我们需要矩形的4个顶点坐标box, 通过函数 cv2.cv.BoxPoints() 获得
+                    box = cv2.boxPoints(rect)   #我们需要矩形的4个顶点坐标box, 通过函数 cv2.cv.BoxPoints() 获得
                     box = np.intp(box)  # 最小外接矩形的四个顶点
-                    box_Ax, box_Ay = box[0, 0], box[0, 1]
-                    box_Bx, box_By = box[1, 0], box[1, 1]
-                    box_Cx, box_Cy = box[2, 0], box[2, 1]
-                    box_Dx, box_Dy = box[3, 0], box[3, 1]
-                    box_centerX = int((box_Ax + box_Bx + box_Cx + box_Dx) / 4)
-                    box_centerY = int((box_Ay + box_By + box_Cy + box_Dy) / 4)
-                    box_center = [box_centerX, box_centerY]
+                    box_Ax,box_Ay = box[0,0],box[0,1]
+                    box_Bx,box_By = box[1,0],box[1,1]
+                    box_Cx,box_Cy = box[2,0],box[2,1]
+                    box_Dx,box_Dy = box[3,0],box[3,1]
+                    box_centerX = int((box_Ax + box_Bx + box_Cx + box_Dx)/4)
+                    box_centerY = int((box_Ay + box_By + box_Cy + box_Dy)/4)
+                    box_center = [box_centerX,box_centerY]
 
                     # 剔除图像上部分点 和底部点
                     if box_centerY < 300 or box_centerY > 550:
                         continue
-
+                    
                     # 遍历点 画圈
                     if box_debug:
-                        cv2.circle(Corg_img, (box_centerX, box_centerY), 8, (0, 0, 255), 2)  # 圆点标记识别黑点
+                        cv2.circle(Corg_img, (box_centerX,box_centerY), 8, (0, 0, 255), 2) # 圆点标记识别黑点
                         cv2.imshow('Corg_img', Corg_img)
                         cv2.waitKey(1)
-
+                        
                     # 找出最左点与最右点
-                    if box_centerX < left_point[0]:
+                    if  box_centerX < left_point[0]:
                         left_point = box_center
                     if box_centerX > right_point[0]:
                         right_point = box_center
 
-                    if box_centerX <= 80 or box_centerX >= 400:  # 排除左右边沿点 box_centerXbox_centerX 240
+                    if box_centerX <= 80 or box_centerX >= 400 :  # 排除左右边沿点 box_centerXbox_centerX 240
                         continue
-                    if math.pow(box_centerX - 240, 2) + math.pow(box_centerY - 640, 2) < math.pow(Big_battle[0] - 240,
-                                                                                                  2) + math.pow(
-                            Big_battle[1] - 640, 2):
-                        Big_battle = box_center  # 这个是要规避的黑点
+                    if math.pow(box_centerX - 240 , 2) + math.pow(box_centerY - 640 , 2) < math.pow(Big_battle[0] - 240 , 2) + math.pow(Big_battle[1] - 640 , 2):
+                        Big_battle =  box_center  # 这个是要规避的黑点
                         # print("1272L go_up False ",Big_battle[0],Big_battle[1])
 
                 # 显示图
                 if img_debug:
-                    cv2.circle(Corg_img, (left_point[0], left_point[1]), 7, (0, 255, 0), -1)  # 圆点标记
-                    cv2.circle(Corg_img, (right_point[0], right_point[1]), 7, (0, 255, 255), -1)  # 圆点标记
-                    cv2.circle(Corg_img, (Big_battle[0], Big_battle[1]), 7, (255, 255, 0), -1)  # 圆点标记
-                    cv2.putText(Corg_img, "Bbox_centerY:" + str(int(Bbox_centerY)), (230, 460),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 0), 2)  # (0, 0, 255)BGR
-                    cv2.putText(Corg_img, "Big_battle x,y:" + str(int(Big_battle[0])) + ', ' + str(int(Big_battle[1])),
-                                (230, 480), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 0), 2)  # (0, 0, 255)BGR
-                    cv2.putText(Corg_img, "baffle_angle:" + str(int(baffle_angle)), (230, 440),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 0), 2)  # (0, 0, 255)BGR
-                    cv2.line(Corg_img, (Big_battle[0], Big_battle[1]), (240, 640), (0, 255, 255), thickness=2)
-                    cv2.line(Corg_img, (0, 500), (480, 500), (255, 255, 255), thickness=2)
-                    cv2.rectangle(Corg_img, (50, 350), (430, 550), (0, 0, 255), thickness=2)
-
+                    cv2.circle(Corg_img, (left_point[0],left_point[1]), 7, (0, 255, 0), -1) # 圆点标记
+                    cv2.circle(Corg_img, (right_point[0],right_point[1]), 7, (0, 255, 255), -1) # 圆点标记
+                    cv2.circle(Corg_img, (Big_battle[0],Big_battle[1]), 7, (255, 255, 0), -1) # 圆点标记
+                    cv2.putText(Corg_img, "Bbox_centerY:" + str(int(Bbox_centerY)), (230, 460), cv2.FONT_HERSHEY_SIMPLEX, 0.65,(0, 0, 0), 2)  # (0, 0, 255)BGR
+                    cv2.putText(Corg_img, "Big_battle x,y:" + str(int(Big_battle[0])) +', ' + str(int(Big_battle[1])) , (230, 480), cv2.FONT_HERSHEY_SIMPLEX, 0.65,(0, 0, 0), 2)  # (0, 0, 255)BGR
+                    cv2.putText(Corg_img, "baffle_angle:" + str(int(baffle_angle)), (230, 440), cv2.FONT_HERSHEY_SIMPLEX, 0.65,(0, 0, 0), 2)  # (0, 0, 255)BGR
+                    cv2.line(Corg_img, (Big_battle[0],Big_battle[1]), (240,640), (0, 255, 255), thickness=2)
+                    cv2.line(Corg_img, (0,500), (480,500), (255, 255, 255), thickness=2)
+                    cv2.rectangle(Corg_img, (50,350), (430,550), (0, 0, 255), thickness=2)
+                    
                     # cv2.imshow('handling', handling)
                     cv2.imshow('Corg_img', Corg_img)
                     k = cv2.waitKey(100)
@@ -3386,62 +3338,64 @@ def obstacle():
                         break
                     elif k == ord('s'):
                         print("save picture123")
-                        cv2.imwrite("picture123.jpg", HeadOrg_img)  # 保存图片
+                        cv2.imwrite("picture123.jpg",HeadOrg_img) #保存图片
 
-                # 370修改为360
+                
+                #370修改为360
                 if Big_battle[1] < 350:
-                    print("3564L 前进靠近一步 forwardSlow0403 ", Big_battle[1])
+                    print("3564L 前进靠近一步 forwardSlow0403 ",Big_battle[1])
                     action_append("Stand")
                     action_append("forwardSlow0403")
                     action_append("Stand")
                     angle_adjust()
+                   
 
-
-                # 410
+                #410
                 elif Big_battle[1] < 400:
-                    print("3575L 慢慢前进靠近 Forwalk01", Big_battle[1])
+                    print("3575L 慢慢前进靠近 Forwalk01",Big_battle[1])
                     action_append("Stand")
                     action_append("Forwalk01")
                     action_append("Stand")
                     angle_adjust()
 
-
-
-
-                elif (50 <= Big_battle[0] and Big_battle[0] < 140):
-                    print("3580L 右平移一步 Right02move", Big_battle[0])
+              
+             
+                 
+                elif (50<= Big_battle[0] and Big_battle[0] < 140):
+                    print("3580L 右平移一步 Right02move",Big_battle[0])
                     action_append("Stand")
                     action_append("Right02move")
-
-                    # 240修改为265
-                elif (140 <= Big_battle[0] and Big_battle[0] < 240):
-                    print("3586L 右平移三步 Right3move", Big_battle[0])
+                    
+                
+                    #240修改为265
+                elif (140<= Big_battle[0] and Big_battle[0]< 240):
+                    print("3586L 右平移三步 Right3move",Big_battle[0])
                     action_append("Stand")
                     action_append("Right3move")
                     action_append("Stand")
                     action_append("Right02move")
                     action_append("Stand")
                     action_append("Right02move")
+                    
+                    
 
-
-
-                elif (240 <= Big_battle[0] and Big_battle[0] < 360):
-                    print("3592L 向左平移三步 Left3move", Big_battle[0])
+                elif (240<= Big_battle[0] and Big_battle[0]< 360):
+                    print("3592L 向左平移三步 Left3move",Big_battle[0])
                     action_append("Stand")
                     action_append("Left3move")
                     action_append("Stand")
                     action_append("Left3move")
                     action_append("Stand")
                     action_append("Left3move")
+                   
+                    
 
-
-
-                elif (360 <= Big_battle[0] < 430):
-                    print("3598L 向左平移一步 Left02move", Big_battle[0])
+                elif (360<= Big_battle[0] < 430):
+                    print("3598L 向左平移一步 Left02move",Big_battle[0])
                     action_append("Stand")
                     action_append("Left02move")
-
-
+                    
+                    
 
                 else:
                     print("3604L error 不在范围 继续向前走")
@@ -3452,15 +3406,15 @@ def obstacle():
                 print("3607L 继续向前")
                 # print(Big_battle)
                 action_append("forwardSlow0403")
-                Big_battle = [0, 0]
+                Big_battle = [0,0]
 
                 if img_debug:
-                    cv2.circle(Corg_img, (left_point[0], left_point[1]), 7, (0, 255, 0), -1)  # 圆点标记
-                    cv2.circle(Corg_img, (right_point[0], right_point[1]), 7, (0, 255, 255), -1)  # 圆点标记
-                    cv2.circle(Corg_img, (Big_battle[0], Big_battle[1]), 7, (255, 255, 0), -1)  # 圆点标记
-                    cv2.line(Corg_img, (Big_battle[0], Big_battle[1]), (240, 640), (0, 255, 255), thickness=2)
+                    cv2.circle(Corg_img, (left_point[0],left_point[1]), 7, (0, 255, 0), -1) # 圆点标记
+                    cv2.circle(Corg_img, (right_point[0],right_point[1]), 7, (0, 255, 255), -1) # 圆点标记
+                    cv2.circle(Corg_img, (Big_battle[0],Big_battle[1]), 7, (255, 255, 0), -1) # 圆点标记
+                    cv2.line(Corg_img, (Big_battle[0],Big_battle[1]), (240,640), (0, 255, 255), thickness=2)
                     # 500线
-                    cv2.line(Corg_img, (0, 500), (480, 500), (255, 255, 255), thickness=2)
+                    cv2.line(Corg_img, (0,500), (480,500), (255, 255, 255), thickness=2)
                     cv2.imshow('Corg_img', Corg_img)
                     k = cv2.waitKey(100)
                     if k == 27:
@@ -3469,12 +3423,11 @@ def obstacle():
                         break
                     elif k == ord('s'):
                         print("save picture123")
-                        cv2.imwrite("picture123.jpg", HeadOrg_img)  # 保存图片
-
+                        cv2.imwrite("picture123.jpg",HeadOrg_img) #保存图片        
 
 ###################### 终            点-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-
 def end_door():
-    global ChestOrg_img, state, state_sel, step, reset, skip, img_debug, end_door_flag
+    global ChestOrg_img, state, state_sel, step, reset, skip, img_debug,end_door_flag
     end_door_flag = 0
     state_sel = 'door'
     state = 1
@@ -3484,48 +3437,45 @@ def end_door():
     else:
         return
 
-    while state == 1:
+    while state == 1 :
 
-        if step == 0:  # 判断门是否抬起
+        if step == 0: #判断门是否抬起
             if ChestOrg_img is None:
                 continue
-
+            
             org_img_copy = ChestOrg_img.copy()
             org_img_copy = np.rot90(org_img_copy)
-            handling = org_img_copy.copy()
+            handling = org_img_copy.copy()           
 
-            border = cv2.copyMakeBorder(handling, 12, 12, 16, 16, borderType=cv2.BORDER_CONSTANT,
-                                        value=(255, 255, 255))  # 扩展白边，防止边界无法识别
-            handling = cv2.resize(border, (chest_r_width, chest_r_height), interpolation=cv2.INTER_CUBIC)  # 将图片缩放
-            frame_gauss = cv2.GaussianBlur(handling, (21, 21), 0)  # 高斯模糊
-            frame_hsv = cv2.cvtColor(frame_gauss, cv2.COLOR_BGR2HSV)  # 将图片转换到HSV空间
+            border = cv2.copyMakeBorder(handling, 12, 12, 16, 16, borderType=cv2.BORDER_CONSTANT,value=(255, 255, 255))     # 扩展白边，防止边界无法识别
+            handling = cv2.resize(border, (chest_r_width, chest_r_height), interpolation=cv2.INTER_CUBIC)                   # 将图片缩放
+            frame_gauss = cv2.GaussianBlur(handling, (21, 21), 0)       # 高斯模糊
+            frame_hsv = cv2.cvtColor(frame_gauss, cv2.COLOR_BGR2HSV)    # 将图片转换到HSV空间
+            
+            frame_door_yellow = cv2.inRange(frame_hsv, color_range['yellow_door'][0], color_range['yellow_door'][1])    # 对原图像和掩模(颜色的字典)进行位运算
+            frame_door_black = cv2.inRange(frame_hsv, color_range['black_door'][0], color_range['black_door'][1])       # 对原图像和掩模(颜色的字典)进行位运算
 
-            frame_door_yellow = cv2.inRange(frame_hsv, color_range['yellow_door'][0],
-                                            color_range['yellow_door'][1])  # 对原图像和掩模(颜色的字典)进行位运算
-            frame_door_black = cv2.inRange(frame_hsv, color_range['black_door'][0],
-                                           color_range['black_door'][1])  # 对原图像和掩模(颜色的字典)进行位运算
 
-            frame_door = cv2.add(frame_door_yellow, frame_door_black)
-            open_pic = cv2.morphologyEx(frame_door, cv2.MORPH_OPEN, np.ones((13, 13), np.uint8))  # 开运算 去噪点
-            closed_pic = cv2.morphologyEx(open_pic, cv2.MORPH_CLOSE, np.ones((50, 50), np.uint8))  # 闭运算 封闭连接
+            frame_door = cv2.add(frame_door_yellow, frame_door_black)    
+            open_pic = cv2.morphologyEx(frame_door, cv2.MORPH_OPEN, np.ones((13, 13), np.uint8))      # 开运算 去噪点
+            closed_pic = cv2.morphologyEx(open_pic, cv2.MORPH_CLOSE, np.ones((50, 50), np.uint8))   # 闭运算 封闭连接        
 
-            (image, contours, hierarchy) = cv2.findContours(closed_pic, cv2.RETR_EXTERNAL,
-                                                            cv2.CHAIN_APPROX_NONE)  # 找出轮廓
+            (image, contours, hierarchy) = cv2.findContours(closed_pic, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)  # 找出轮廓
             areaMaxContour, area_max = getAreaMaxContour1(contours)  # 找出最大轮廓
             percent = round(100 * area_max / (chest_r_width * chest_r_height), 2)  # 最大轮廓的百分比
             if areaMaxContour is not None:
                 rect = cv2.minAreaRect(areaMaxContour)  # 矩形框选
-                box = np.int0(cv2.boxPoints(rect))  # 点的坐标
+                box = np.int0(cv2.boxPoints(rect))      # 点的坐标
                 if img_debug:
                     cv2.drawContours(handling, [box], 0, (153, 200, 0), 2)  # 将最小外接矩形画在图上
 
             if img_debug:
-                cv2.putText(handling, 'area: ' + str(percent) + '%', (30, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.7,
-                            (0, 0, 255), 2)
+                cv2.putText(handling, 'area: ' + str(percent) + '%', (30, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
                 cv2.imshow('handling', handling)  # 显示图像
 
-                # cv2.imshow('frame_door_yellow', frame_door_yellow)  # 显示图像
-                # cv2.imshow('frame_door_black', frame_door_black)    # 显示图像
+                #cv2.imshow('frame_door_yellow', frame_door_yellow)  # 显示图像
+                #cv2.imshow('frame_door_black', frame_door_black)    # 显示图像
+                
 
                 k = cv2.waitKey(10)
                 if k == 27:
@@ -3534,12 +3484,14 @@ def end_door():
                     break
                 elif k == ord('s'):
                     print("save picture123")
-                    cv2.imwrite("picture123.jpg", org_img_copy)  # 保存图片
+                    cv2.imwrite("picture123.jpg",org_img_copy) #保存图片
+
+
 
             # 根据比例得到是否前进的信息
-            if percent > 5:  # 检测到横杆
-                print(percent, "%")
-                print("有障碍 等待 contours len：", len(contours))
+            if percent > 5:    #检测到横杆
+                print(percent,"%")
+                print("有障碍 等待 contours len：",len(contours))
                 action_append("Stand")
                 end_door_flag = 1
                 time.sleep(3)
@@ -3549,7 +3501,7 @@ def end_door():
                     print("暂未发现横杆 等待检测")
                     action_append("Stand")
 
-                elif end_door_flag == 1 and percent < 1:
+                elif end_door_flag == 1 and percent <1 :
                     print(percent)
                     # print("3894L 执行3步")
                     # action_append("forwardSlow0403")
@@ -3562,13 +3514,14 @@ def end_door():
                     step = 1
 
                 else:
-                    print(percent, "%")
-                    print("有障碍 等待 contours len：", len(contours))
+                    print(percent,"%")
+                    print("有障碍 等待 contours len：",len(contours))
                     action_append("Stand")
                     time.sleep(3)
-
-        elif step == 1:
+                
+        elif step == 1:  
             break
+
 
 
 #################################################台阶##########################################
@@ -3591,11 +3544,11 @@ def floor():
     bottomcenter_x = 0.5 * r_w
     bottomcenter_y = 0
 
-    topcenter_x_setl = 230
-    topcenter_x_setr = 250
-    # topcenter_y_setu=280
-    # bottomcenter_x_setl=0
-    # bottomcenter_x_setr=0
+    topcenter_x_setl=230
+    topcenter_x_setr=250
+    #topcenter_y_setu=280
+    #bottomcenter_x_setl=0
+    #bottomcenter_x_setr=0
     while state_sel == 'floor':
         # chest
         if True:  # 上下边沿
@@ -3627,12 +3580,12 @@ def floor():
             elif step == 3:
                 Imask1 = cv2.inRange(hsv, color_range['red_floor1'][0], color_range['red_floor1'][1])
                 Imask2 = cv2.inRange(hsv, color_range['red_floor2'][0], color_range['red_floor2'][1])
-                Imask = cv2.bitwise_or(Imask1, Imask2)
+                Imask =cv2.bitwise_or(Imask1,Imask2)
             elif step == 4:
                 Imask = cv2.inRange(hsv, color_range['green_floor'][0], color_range['green_floor'][1])
             elif step == 5:
                 Imask = cv2.inRange(hsv, color_range['blue_floor'][0], color_range['blue_floor'][1])
-            elif step == 6 or step == 6.1 or step == 7:
+            elif step == 6 or step == 6.1 or step ==7:
                 frame_1 = cv2.inRange(hsv, color_range['red_XP1'][0], color_range['red_XP1'][1])  # 对原图像和掩模(颜色的字典)进行位运算
                 frame_2 = cv2.inRange(hsv, color_range['red_XP2'][0], color_range['red_XP2'][1])
                 Imask = cv2.bitwise_or(frame_1, frame_2)
@@ -3683,6 +3636,7 @@ def floor():
                     #     up_point = c[0]
                     # if c[0][1]>down_y:
                     #     down_point = c[0]
+
 
                     # if debug:
                     #     handling = ChestOrg_img.copy()
@@ -4054,10 +4008,10 @@ def floor():
                             action_append("Forwalk00")
                             action_append("Stand")
                             action_append("actBeforeXP")
-                            step = 6.1
+                            step =6.1
 
                 elif step == 6.1:
-                    if area_max > 20:
+                    if area_max>20:
                         print("面积大于20则继续下坡走，XPforwalkSlow")
                         action_append("XPforwalkSlow")
                     else:
@@ -4084,7 +4038,7 @@ def floor():
                 action_append("XPforwalkSlow")
                 action_append("XPforwalkSlow")
                 action_append("XPforwalkSlow")
-                step = 7
+                step=7
             elif step == 7:
                 print("899L 完成floor")
                 action_append("Forwalk00")
@@ -4098,9 +4052,12 @@ def floor():
                 action_append("Forwalk00")
 
 
+
+
+
 ###################### 起            点-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-
 def start_door():
-    global ChestOrg_img, state, state_sel, step, img_debug, door_flag
+    global ChestOrg_img, state, state_sel, step, img_debug,door_flag
     start_door_flag = 0
     state_sel = 'start_door'
     state = 1
@@ -4110,48 +4067,45 @@ def start_door():
     else:
         pass
 
-    while state == 1:
+    while state == 1 :
 
-        if step == 0:  # 判断门是否抬起
+        if step == 0: #判断门是否抬起
             if ChestOrg_img is None:
                 continue
-
+            
             org_img_copy = ChestOrg_img.copy()
             org_img_copy = np.rot90(org_img_copy)
-            handling = org_img_copy.copy()
+            handling = org_img_copy.copy()           
 
-            border = cv2.copyMakeBorder(handling, 12, 12, 16, 16, borderType=cv2.BORDER_CONSTANT,
-                                        value=(255, 255, 255))  # 扩展白边，防止边界无法识别
-            handling = cv2.resize(border, (chest_r_width, chest_r_height), interpolation=cv2.INTER_CUBIC)  # 将图片缩放
-            frame_gauss = cv2.GaussianBlur(handling, (21, 21), 0)  # 高斯模糊
-            frame_hsv = cv2.cvtColor(frame_gauss, cv2.COLOR_BGR2HSV)  # 将图片转换到HSV空间
+            border = cv2.copyMakeBorder(handling, 12, 12, 16, 16, borderType=cv2.BORDER_CONSTANT,value=(255, 255, 255))     # 扩展白边，防止边界无法识别
+            handling = cv2.resize(border, (chest_r_width, chest_r_height), interpolation=cv2.INTER_CUBIC)                   # 将图片缩放
+            frame_gauss = cv2.GaussianBlur(handling, (21, 21), 0)       # 高斯模糊
+            frame_hsv = cv2.cvtColor(frame_gauss, cv2.COLOR_BGR2HSV)    # 将图片转换到HSV空间
+            
+            frame_door_yellow = cv2.inRange(frame_hsv, color_range['yellow_door'][0], color_range['yellow_door'][1])    # 对原图像和掩模(颜色的字典)进行位运算
+            frame_door_black = cv2.inRange(frame_hsv, color_range['black_door'][0], color_range['black_door'][1])       # 对原图像和掩模(颜色的字典)进行位运算
 
-            frame_door_yellow = cv2.inRange(frame_hsv, color_range['yellow_door'][0],
-                                            color_range['yellow_door'][1])  # 对原图像和掩模(颜色的字典)进行位运算
-            frame_door_black = cv2.inRange(frame_hsv, color_range['black_door'][0],
-                                           color_range['black_door'][1])  # 对原图像和掩模(颜色的字典)进行位运算
 
-            frame_door = cv2.add(frame_door_yellow, frame_door_black)
-            open_pic = cv2.morphologyEx(frame_door, cv2.MORPH_OPEN, np.ones((13, 13), np.uint8))  # 开运算 去噪点
-            closed_pic = cv2.morphologyEx(open_pic, cv2.MORPH_CLOSE, np.ones((50, 50), np.uint8))  # 闭运算 封闭连接
+            frame_door = cv2.add(frame_door_yellow, frame_door_black)    
+            open_pic = cv2.morphologyEx(frame_door, cv2.MORPH_OPEN, np.ones((13, 13), np.uint8))      # 开运算 去噪点
+            closed_pic = cv2.morphologyEx(open_pic, cv2.MORPH_CLOSE, np.ones((50, 50), np.uint8))   # 闭运算 封闭连接        
 
-            (image, contours, hierarchy) = cv2.findContours(closed_pic, cv2.RETR_EXTERNAL,
-                                                            cv2.CHAIN_APPROX_NONE)  # 找出轮廓
+            (image, contours, hierarchy) = cv2.findContours(closed_pic, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)  # 找出轮廓
             areaMaxContour, area_max = getAreaMaxContour1(contours)  # 找出最大轮廓
             percent = round(100 * area_max / (chest_r_width * chest_r_height), 2)  # 最大轮廓的百分比
             if areaMaxContour is not None:
                 rect = cv2.minAreaRect(areaMaxContour)  # 矩形框选
-                box = np.int0(cv2.boxPoints(rect))  # 点的坐标
+                box = np.int0(cv2.boxPoints(rect))      # 点的坐标
                 if img_debug:
                     cv2.drawContours(handling, [box], 0, (153, 200, 0), 2)  # 将最小外接矩形画在图上
 
             if img_debug:
-                cv2.putText(handling, 'area: ' + str(percent) + '%', (30, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.7,
-                            (0, 0, 255), 2)
+                cv2.putText(handling, 'area: ' + str(percent) + '%', (30, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
                 cv2.imshow('handling', handling)  # 显示图像
 
-                # cv2.imshow('frame_door_yellow', frame_door_yellow)  # 显示图像
-                # cv2.imshow('frame_door_black', frame_door_black)    # 显示图像
+                #cv2.imshow('frame_door_yellow', frame_door_yellow)  # 显示图像
+                #cv2.imshow('frame_door_black', frame_door_black)    # 显示图像
+                
 
                 k = cv2.waitKey(10)
                 if k == 27:
@@ -4160,12 +4114,14 @@ def start_door():
                     break
                 elif k == ord('s'):
                     print("save picture123")
-                    cv2.imwrite("picture123.jpg", org_img_copy)  # 保存图片
+                    cv2.imwrite("picture123.jpg",org_img_copy) #保存图片
+
+
 
             # 根据比例得到是否前进的信息
-            if percent > 5:  # 检测到横杆
-                print(percent, "%")
-                print("有障碍 等待 contours len：", len(contours))
+            if percent > 5:    #检测到横杆
+                print(percent,"%")
+                print("有障碍 等待 contours len：",len(contours))
                 action_append("Stand")
                 start_door_flag = 1
                 time.sleep(3)
@@ -4175,7 +4131,7 @@ def start_door():
                     print("暂未发现横杆 等待检测")
                     action_append("Stand")
 
-                elif start_door_flag == 1 and percent < 1:
+                elif start_door_flag == 1 and percent <1:
                     print(percent)
                     # print("3894L 执行3步")
                     # action_append("forwardSlow0403")
@@ -4188,22 +4144,21 @@ def start_door():
                     step = 1
 
                 else:
-                    print(percent, "%")
-                    print("有障碍 等待 contours len：", len(contours))
+                    print(percent,"%")
+                    print("有障碍 等待 contours len：",len(contours))
                     action_append("Stand")
                     time.sleep(3)
-
-        elif step == 1:
+                
+        elif step == 1:  
             break
-
-
+            
 def get_img():
     global ChestOrg_img, HeadOrg_img, HeadOrg_img, chest_ret
     global ret
     global cap_chest
     while True:
         if 1:
-            # if not img_debug:
+        # if not img_debug:
             if cap_chest.isOpened():
 
                 chest_ret, ChestOrg_img = cap_chest.read()
@@ -4222,7 +4177,6 @@ def get_img():
 
         else:
             ChestOrg_img = cv2.imread("../img_dbg/1.jpg")
-
 
 # 读取图像线程
 
@@ -4245,44 +4199,45 @@ def move_action():
     if real_test:
         CMDcontrol.CMD_transfer()
 
-
 # 动作执行线程
 th2 = threading.Thread(target=move_action)
 th2.setDaemon(True)
 th2.start()
+
 
 if __name__ == '__main__':
     if real_test:
         while len(CMDcontrol.action_list) > 0:
             print("等待启动")
             time.sleep(1)
-        action_append("HeadTurnMM")  # yw:headturnmm 是把头部转到100位置，应该是归零（归位）
+        action_append("HeadTurnMM") #yw:headturnmm 是把头部转到100位置，应该是归零（归位）
 
     while True:
         if ChestOrg_img is not None and chest_ret:
-            k = cv2.waitKey(10)  # yw：换行符
-            if k == 27:  # yw：ESC键
+            k = cv2.waitKey(10)#yw：换行符
+            if k == 27:#yw：ESC键
                 cv2.destroyWindow('camera_test')
                 break
-
-            if single_debug:  # yw：每执行一次动作停顿一下
+            
+            if single_debug:#yw：每执行一次动作停顿一下
                 print("Press any key to continue...")
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
 
             print("start door START")
-            t1 = cv2.getTickCount()  # yw：这个函数返回CPU的时间（但是得到的是周期数，要换成秒的话需要除以频率），取两次时间就可以得到时间差。t2-t1
-            f = cv2.getTickFrequency()  # yw：这个函数返回CPU时间的频率。
+            t1 = cv2.getTickCount()#yw：这个函数返回CPU的时间（但是得到的是周期数，要换成秒的话需要除以频率），取两次时间就可以得到时间差。t2-t1
+            f = cv2.getTickFrequency()#yw：这个函数返回CPU时间的频率。
             start_door()
             t2 = cv2.getTickCount()
-            print("start door Execution time: {}".format((t2 - t1) / f))
+            print("start door Execution time: {}".format((t2-t1)/f))
             if single_debug:
                 print("Press any key to continue...")
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
 
-            while True:
 
+            while True:
+                  
                 i = recognize()
                 if i == 5 or i == 9:
                     flag = 1
@@ -4291,15 +4246,15 @@ if __name__ == '__main__':
                     f = cv2.getTickFrequency()
                     if i == 5:
                         Greenbridge('green_bridge')
-                    elif i == 9:
+                    elif i ==9:
                         Greenbridge('blue_bridge')
                     t2 = cv2.getTickCount()
-                    print("Single log bridge Execution time: {}".format((t2 - t1) / f))
+                    print("Single log bridge Execution time: {}".format((t2-t1)/f))
                     if single_debug:
                         print("Press any key to continue...")
                         cv2.waitKey(0)
                         cv2.destroyAllWindows()
-                    cv2.destroyAllWindows()
+                    cv2.destroyAllWindows()   
                     break
 
                 elif i == 1 or i == 10:
@@ -4312,7 +4267,7 @@ if __name__ == '__main__':
                     elif i == 10:
                         hole_edge('blue_hole_chest')
                     t2 = cv2.getTickCount()
-                    print("Through Pit Execution time: {}".format((t2 - t1) / f))
+                    print("Through Pit Execution time: {}".format((t2-t1)/f))
                     if single_debug:
                         print("Press any key to continue...")
                         cv2.waitKey(0)
@@ -4326,79 +4281,81 @@ if __name__ == '__main__':
                     # cv2.imshow(HeadOrg_img)
                     # cv2.waitKey(0)
                     # cv2.destroyAllWindows()
-                    continue  # yw：这里便是有无限循环的可能了，如果一直识别不到关卡，应该做一些其他动作来跳出该循环。可在进入该循环时设一个t0，t如果大于比如10s那么跳出循环去做点什么。
+                    continue#yw：这里便是有无限循环的可能了，如果一直识别不到关卡，应该做一些其他动作来跳出该循环。可在进入该循环时设一个t0，t如果大于比如10s那么跳出循环去做点什么。
 
             # yw：下面这几段代码，直接调用了相应的关卡函数，因为在关卡内部有识别该关卡的方法。
-            print("Through obstacle START")  # yw：过雷阵
+            print("Through obstacle START")#yw：过雷阵
             t1 = cv2.getTickCount()
             f = cv2.getTickFrequency()
             obstacle()
             t2 = cv2.getTickCount()
-            print("Through obstacle Execution time: {}".format((t2 - t1) / f))
+            print("Through obstacle Execution time: {}".format((t2-t1)/f))
             if single_debug:
                 print("Press any key to continue...")
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
-
-            print("Through baffle START")  # yw：过挡板
+            
+            
+            print("Through baffle START")#yw：过挡板
             t1 = cv2.getTickCount()
             f = cv2.getTickFrequency()
             baffle()
             t2 = cv2.getTickCount()
-            print("Through baffle Execution time: {}".format((t2 - t1) / f))
+            print("Through baffle Execution time: {}".format((t2-t1)/f))
             if single_debug:
                 print("Press any key to continue...")
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
-
+            
+            
             print("Into Door START")
             t1 = cv2.getTickCount()
             f = cv2.getTickFrequency()
             into_the_door()
             t2 = cv2.getTickCount()
-            print("Into Door START Execution time: {}".format((t2 - t1) / f))
+            print("Into Door START Execution time: {}".format((t2-t1)/f))
             if single_debug:
                 print("Press any key to continue...")
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
-
+            
             if flag == 2:
                 area_green = area_calculate('green_bridge')
                 area_blue = area_calculate('blue_bridge')
-                if (area_green > area_blue):
+                if(area_green > area_blue):
                     print("Single log green bridge START")
                     Greenbridge('green_bridge')
-                elif (area_blue > area_green):
+                elif(area_blue > area_green):
                     print("Single log blue bridge START")
                     Greenbridge('blue_bridge')
 
             elif flag == 1:
                 area_green = area_calculate('green_hole_chest')
                 area_blue = area_calculate('blue_hole_chest')
-                if (area_green > area_blue):
+                if(area_green > area_blue):
                     print("Single log green hole START")
                     hole_edge('green_hole_chest')
-                elif (area_blue > area_green):
+                elif(area_blue > area_green):
                     print("Single log blue bridge START")
                     hole_edge('blue_hole_chest')
-
+            
             print("Kick ball START")
             t1 = cv2.getTickCount()
             f = cv2.getTickFrequency()
             kick_ball()
             t2 = cv2.getTickCount()
-            print("Kick ball Execution time: {}".format((t2 - t1) / f))
+            print("Kick ball Execution time: {}".format((t2-t1)/f))
             if single_debug:
                 print("Press any key to continue...")
                 cv2.waitKey(0)
-                cv2.destroyAllWindows()
-
+                cv2.destroyAllWindows()   
+            
             print("Floor START")
             t1 = cv2.getTickCount()
             f = cv2.getTickFrequency()
             floor()
             t2 = cv2.getTickCount()
-            print("Floor Execution time: {}".format((t2 - t1) / f))
+            print("Floor Execution time: {}".format((t2-t1)/f))
             if single_debug:
                 print("Press any key to continue...")
                 cv2.waitKey(0)
@@ -4409,27 +4366,27 @@ if __name__ == '__main__':
             f = cv2.getTickFrequency()
             end_door()
             t2 = cv2.getTickCount()
-            print("End Door Execution time: {}".format((t2 - t1) / f))
+            print("End Door Execution time: {}".format((t2-t1)/f))
             if single_debug:
                 print("Press any key to continue...")
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()
-
+                cv2.waitKey(0)  
+                cv2.destroyAllWindows()      
+            
             print("End Door START")
             t1 = cv2.getTickCount()
             f = cv2.getTickFrequency()
             end_door()
             t2 = cv2.getTickCount()
-            print("End Door Execution time: {}".format((t2 - t1) / f))
+            print("End Door Execution time: {}".format((t2-t1)/f))
             if single_debug:
                 print("Press any key to continue...")
-                cv2.waitKey(0)
+                cv2.waitKey(0)  
                 cv2.destroyAllWindows()
             while (1):
                 print("结束")
                 time.sleep(10000)
-
-
+            
+            
         else:
             print('image is empty chest_ret:', chest_ret)
             time.sleep(0.01)
