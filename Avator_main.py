@@ -54,11 +54,11 @@ else:
 color_range = {
     'yellow_door': [(20, 140, 60), (40, 240, 150)],
     'black_door': [(25, 25, 10), (110, 150, 30)],
-    'blue_baf':[(97 , 183 , 73), (107 , 255 , 187)],#yw:挡板的蓝色
+    'blue_baf':[(93 , 149 , 74), (105 , 252 , 152)],#yw:挡板的蓝色
     'black_dir':[(45,22,13),(128,135,57)],     #yw:地雷的黑色
     'gray_dir':[(73 , 28 , 70), (88 , 83 , 182)],#yw：地雷关卡地板的灰色
-    'green_hole_chest':[(63 , 101 , 39), (76 , 255 , 168)],#yw:过坑的绿色（胸部检测）
-    'green_hole_head':[(63 , 101 , 39), (76 , 255 , 168)],#yw:过坑的绿色（头部检测)
+    'green_hole_chest':[(67 , 108 , 68), (76 , 243 , 155)],#yw:过坑的绿色（胸部检测）
+    'green_hole_head':[(67 , 140 , 39), (76 , 255 , 104)],#yw:过坑的绿色（头部检测)
     'blue_floor':[(100 , 185 , 155), (105 , 234 , 229)],#yw:蓝色台阶
     'green_floor':[(69 , 155 , 86), (75 , 214 , 155)],#yw:绿色台阶
     'red_floor1':[(0, 153 , 142), (2 , 206 , 221)],#yw:红色台阶   我们取红色台阶需要有两个值
@@ -72,6 +72,7 @@ color_range = {
     'blue_hole_chest': [(111 , 86 , 111), (133 , 198 , 179)],#yw:踢球洞的蓝色圈
     'blue_hole_head' : [(112 , 90 , 49), (146 , 209 , 111)],
     'green_bridge':[(69 , 116 , 115), (79 , 212 , 176)],#yw:绿色桥
+    'head_blue_door':[(100 , 117 , 70), (109 , 228 , 129)],#wc:蓝色门
 }
 
 #################################################################识别
@@ -169,7 +170,7 @@ def hole_recognize():#yw：hole_recognize和hole_recognize_2的区别在于颜�
     # cv2.drawContours(src,contours2, 0, (0, 0, 255), 2)
     # print(len(contours2))
     # print(Area)
-    if Area > 20000 and len(contours2) >= 2:
+    if Area > 10000 and len(contours2) >= 2:
         return True
     else:
         return False
@@ -1315,8 +1316,8 @@ def door_act_move():
 
     step1_angle_top_L = 3
     step1_angle_top_R = -3
-    step1_head_bottom_x_F = 310
-    step1_head_bottom_x_B = 340
+    step1_head_bottom_x_F = 270
+    step1_head_bottom_x_B = 300
     step1_delta = 20
     step1_close = 375
 
@@ -3078,6 +3079,8 @@ def baffle():
                 print("3097L 前挪一点点")
                 print("3098L 翻栏杆 翻栏杆 RollRail")
                 action_append("Right3move")
+                action_append("Right3move")
+                action_append("Right3move")
                 action_append("Stand")
                 action_append("RollRail")
                 action_append("Stand")
@@ -3219,7 +3222,7 @@ def hole_edge_main(color):
             if blackLine_L[0] == blackLine_R[0]:
                 L_R_angle = 0
             else:
-                L_R_angle =  (-math.atan( (blackLine_L[1]-blackLine_R[1]) / (blackLine_L[0]-blackLine_R[0]) ) *180.0/math.pi)-4
+                L_R_angle =  (-math.atan( (blackLine_L[1]-blackLine_R[1]) / (blackLine_L[0]-blackLine_R[0]) ) *180.0/math.pi)+4
 
 
 
