@@ -1958,90 +1958,94 @@ def kick_act_move():
         if step == -1:
             # for i in range(0, 2):
             #     if edge_angle('red_floor') == 1:
-            #         action_append("fastForward03")
-            
+            #         action_append("Forwalk01")
+
             # action_append("HeadTurnMM")
             # action_append("Right3move")
             # action_append("Right3move")
             action_append("Stand")
-            action_append("fastForward03")
+            action_append("Forwalk01")
 
             action_append("Stand")
             action_append("turn001L")
-            # action_append("fastForward03")
+            # action_append("Forwalk01")
             # action_append("turn001L")
-            action_append("fast_forward_step")
-            action_append("fast_forward_step")
+            action_append("Forwalk01")
+            action_append("Forwalk01")
             action_append("turn001R")
             step = 0
         # step = 0 # 单步调试某一步骤用
         elif step == 0:  # 发现球，发现球洞，记录球与球洞的相对位置
             # print("看黑线调整居中")
-
             if Chest_ball_flag is True:  # 前进到球跟前
                 if fast_run:
-                    if Chest_ball_y <= 270:  # 340
-                        print("2002L step = 0 看到了球，距离很远, 快走前进 fastForward04 Chest_ball_y={} < 270".format(Chest_ball_y))
+                    if Chest_ball_y <= 320:  # 340
+                        print("2002L step = 0 看到了球，距离很远, 快走前进 fastForward04 Chest_ball_y={} < 320".format(Chest_ball_y))
                         # action_append("forwardSlow0403")
                         # action_append("forwardSlow0403")
                         if real_test:
-                            action_append("fast_forward_step")                 
+                            action_append("Forwalk01")
                             action_append("turn001R")
                             time.sleep(sleep_time_l)
                             # head_angle_dis()  # headfftest
-
-                    elif Chest_ball_y <= 270:  # 340
-                        print("2012L 看到了球，距离远， 快走前进 fastForward03 Chest_ball_y={} < 290".format(Chest_ball_y))
+                    elif Chest_ball_y <= 400:  # 340
+                        print("2012L 看到了球，距离远， 快走前进 Forwalk01 Chest_ball_y={} < 290".format(Chest_ball_y))
                         if real_test:
-                            action_append("fastForward03")             
+                            action_append("Forwalk01")
                             time.sleep(sleep_time_l)
                             # head_angle_dis()    # headfftest
-                    
+
                     if hole_flag:
-                        if 45 < hole_Angle < 80:
-                            print("2020L step = 0,看到球门了，向球靠近的过程中，也要对准球门，以免看不到球门了 Hole_angle={}, 因此需要向右转 turn001R".format(hole_Angle))
+                        if 45 < hole_Angle < 70:
+                            print(
+                                "2020L step = 0,看到球门了，向球靠近的过程中，也要对准球门，以免看不到球门了 Hole_angle={}, 因此需要向右转 turn001R".format(
+                                    hole_Angle))
                             if real_test:
                                 action_append("turn001R")
-                        elif -80 < hole_Angle < -45:
-                            print("2024L step = 0,看到球门了，向球靠近的过程中，也要对准球门，以免看不到球门了 Hole_angle={}, 因此需要向左转 turn001L".format(hole_Angle))
+                        elif -70 < hole_Angle < -45:
+                            print(
+                                "2024L step = 0,看到球门了，向球靠近的过程中，也要对准球门，以免看不到球门了 Hole_angle={}, 因此需要向左转 turn001L".format(
+                                    hole_Angle))
                             if real_test:
                                 action_append("turn001L")
-                    
-                    if Chest_ball_y > 290:
+
+                    if Chest_ball_y > 370:
                         print("2029L 已接近球了,不能再跑这么快了，进入细调模式（ball_y > 270） Chest_ball_y={}".format(Chest_ball_y))
                         fast_run = False
 
                 else:
                     if Chest_ball_y < 370:  # 390 400改成了390 zzx 10.14
                         # X
-                        if Chest_ball_x < 140:  # 240 - 100
+                        if Chest_ball_x < 140*(4/3):  # 240 - 100
                             print("2036L step = 0 Chest_ball_x < 180 左侧移 Chest_ball_x={}".format(Chest_ball_x))
                             if real_test:
                                 action_append("Left3move")
-                        elif Chest_ball_x > 340:  # 240 + 100
+                        elif Chest_ball_x > 340*(4/3):  # 240 + 100
                             print("2040L step = 0 Chest_ball_x > 300 右侧移 Chest_ball_x={}".format(Chest_ball_x))
                             if real_test:
                                 action_append("Right3move")
                         else:
-                            if Chest_ball_y < 350:
-                                print("2045L step = 0 再靠球近些（ball_y < 360）前挪一点 Forwalk00 Chest_ball_y={}".format(Chest_ball_y))
+                            if Chest_ball_y < 370:
+                                print("2045L step = 0 再靠球近些（ball_y < 370）前挪一点 forwalkVeryslow Chest_ball_y={}".format(
+                                    Chest_ball_y))
                                 if real_test:
-                                    # action_append("fast_forward_step") #zzx 10.14
-                                    action_append("Forwalk01")
+                                    # action_append("Forwalk01") #zzx 10.14
+                                    action_append("forwalkVeryslow")
                                     action_append("turn001R")
-                                   # action_append("Forwalk02")
+                                # action_append("Forwalk02")
                             else:
                                 print("2052L step = 0 再靠球近些（ball_y < 360）前挪一点点  Chest_ball_y={}".format(Chest_ball_y))
                                 if real_test:
-                                    action_append("Forwalk00")
+                                    action_append("forwalkVeryslow")
                                     action_append("Stand")
 
-                    elif Chest_ball_y > 430:#470改成了430 zzx 10.14
+                    elif Chest_ball_y > 430:  # 470改成了430 zzx 10.14
                         print("2058L step = 0 隔球太近（ball_y < 360）后退一点点  Chest_ball_y={}".format(Chest_ball_y))
                         if real_test:
-                            action_append("Back1Run")
+                            action_append("Stand")
+                            action_append("Back3Run")
 
-                    elif Chest_ball_y >= 370 and Chest_ball_y <= 430:  # Chest_ball_y>360
+                    elif Chest_ball_y >= 400 and Chest_ball_y <= 450:  # Chest_ball_y>360
                         print("2063L goto step1  Chest_ball_y={}".format(Chest_ball_y))
                         step = 1
             else:
@@ -2052,10 +2056,10 @@ def kick_act_move():
                         action_append("turn001R")  # ffetst
                         action_append("Stand")
                     # elif count < 1:
-                    #     action_append("fastForward03")
+                    #     action_append("Forwalk01")
                     else:
-                        #action_append("fast_forward_step")        zzx 10.13
-                        action_append("Forwalk02")
+                        # action_append("Forwalk01")        zzx 10.13
+                        action_append("forwalkVeryslow")
                         action_append("turn001R")
 
                 # if head_state == 0:
@@ -2070,18 +2074,19 @@ def kick_act_move():
         elif step == 1:  # 看球调整位置   逐步前进调整至看球洞
             if Chest_ball_flag is False:
                 if real_test:
-                    action_append("Back2Run")
+                    action_append("Stand")
+                    action_append("Back3Run")
 
-            elif Chest_ball_y <= 350:
-                print("2094L step = 1 前挪一点点 Forwalk00 < 380 Chest_ball_y={}".format(Chest_ball_y))
-                if real_test: 
-                    action_append("Forwalk00")
-            elif Chest_ball_y > 480:
-                print("2098L step = 1 后一步 Back2Run > 480 Chest_ball_y={}".format(Chest_ball_y))
+            elif Chest_ball_y <= 400:
+                print("2094L step = 1 前挪一点点 forwalkVeryslow < 380 Chest_ball_y={}".format(Chest_ball_y))
                 if real_test:
-                    action_append("Back2Run")
-            elif 350 < Chest_ball_y <= 480:
-
+                    action_append("forwalkVeryslow")
+            elif Chest_ball_y > 450:
+                print("2098L step = 1 后一步 Back3Run > 480 Chest_ball_y={}".format(Chest_ball_y))
+                if real_test:
+                    action_append("Stand")
+                    action_append("Back3Run")
+            elif 400 < Chest_ball_y <= 450:
                 if hole_flag == True:
                     if head_state == -60:
                         print("头右看，看到球洞")
@@ -2100,84 +2105,12 @@ def kick_act_move():
                     print("2118L error 左右旋转头 寻找球洞 ")
                     if real_test:
                         action_append("turn001R")
-                    # 目前假设球洞在前方，head能看到
-
-                    # if head_state == 0:
-                    #     print("头右转(-60)寻找球")
-                    #     head_state = -60
-                    # elif head_state == -60:
-                    #     print("头由右转变为左转(+60)寻找球")
-                    #     head_state = 60
-                    # elif head_state == 60:
-                    #     print("头部 恢复0 向前迈进")
-
-
-
-        # elif step == 2:
-        #     # 头右看，看到球洞
-        #     print("22222222222找红球与球洞")
-        #     if Chest_ball_y < 160:
-        #         print("2138L 一大步前进")
-
-        #     elif Chest_ball_y < 360:
-        #         print("2141L 后挪一点点")
-        #     elif 160 < Chest_ball_y < 320:
-        #         print("找到了在左边跳第4步，找到了在右边跳第3步")
-
-        #         if hole_flag == True:
-        #             if head_state == -60:
-        #                 print("头右看，看到球")
-        #                 step = 3
-        #                 # print("2149L 头恢复0 向右平移")
-        #                 # head_state = 0
-        #             elif head_state == 60:
-        #                 print("头左看，看到球")
-        #                 step = 4
-        #                 # print("2154L 头恢复0 向左平移")
-        #                 # head_state = 0
-        #             elif head_state == 0:  # 头前看 看到球洞
-        #                 step = 1
-        #         else:
-        #             print("左右旋转头 寻找球洞")
-        #             # 目前假设球洞在前方，head能看到
-
-        #             if head_state == 0:
-        #                 print("头右转(-60)寻找球")
-        #                 head_state = -60
-        #             elif head_state == -60:
-        #                 print("头由右转变为左转(+60)寻找球")
-        #                 head_state = 60
-        #             elif head_state == 60:
-        #                 print("头部 恢复0 向前迈进")
-
-        # elif step == 3:
-        #     # 头左看，看到球洞
-        #     print("33333333333左侧移")
-        #     if Chest_ball_y > 280:
-        #         print("后挪一点点")
-        #     elif Chest_ball_y < 150:
-        #         print("前挪一点点")
-        #     elif Chest_ball_x < 450:
-        #         print("左侧移")
-
-        #     if hole_flag == False:
-        #         print("右转")
-        #     else:
-        #         step = 1
-        #         ball_dis_start = True
-        #         hole_angle_start = False
-        #     # 完成左侧移后 右转
-        #     # 找球洞
-
-
-
-
 
         elif step == 4:  # 粗略调整朝向   球与球洞大致在一条线
             # print("调整红球在左脚正前方不远处，看球洞的位置调整")
             if ball_dis_start:
-                if Chest_ball_x <= 200:
-                    if 240 - Chest_ball_x > 40:
+                if Chest_ball_x <= int(200*(4/3)):
+                    if Chest_ball_x < int(200*(4/3)):
                         print("2199L4 step = 4 需要左侧移 Left3move Chest_ball_x={}".format(Chest_ball_x))
                         if real_test:
                             action_append("Left3move")
@@ -2186,8 +2119,8 @@ def kick_act_move():
                         if real_test:
                             action_append("Left02move")
                     angle_dis_count = 0
-                elif Chest_ball_x > 280:
-                    if Chest_ball_x - 240 > 40:
+                elif Chest_ball_x > 280*(4/3):
+                    if Chest_ball_x > 280*(4/3):
                         print("2209L4 step = 4 需要右侧移 Right3move Chest_ball_x={}".format(Chest_ball_x))
                         if real_test:
                             action_append("Right3move")
@@ -2203,32 +2136,34 @@ def kick_act_move():
             if hole_angle_start:
                 if hole_Angle <= 0:
                     # angle
-                    if hole_Angle > -86:
-                        if hole_Angle >= -82:
-                            if Chest_ball_y > 480:
-                                print("2227L4 需要后挪一点 Back2Run Chest_ball_y={}".format(Chest_ball_y))
+                    if hole_Angle > -70:
+                        if hole_Angle >= -65:
+                            if Chest_ball_y > 500:
+                                print("2227L4 需要后挪一点 Back3Run Chest_ball_y={}".format(Chest_ball_y))
                                 if real_test:
-                                    action_append("Back2Run")
+                                    action_append("Stand")
+                                    action_append("Back3Run")
                                 angle_dis_count = 0
-                            elif Chest_ball_y < 350:
-                                print("2232L4 需要前挪一点 Forwalk00 Chest_ball_y={}".format(Chest_ball_y))
+                            elif Chest_ball_y < 420:
+                                print("2232L4 需要前挪一点 forwalkVeryslow Chest_ball_y={}".format(Chest_ball_y))
                                 if real_test:
-                                    action_append("Forwalk00")
+                                    action_append("forwalkVeryslow")
                                 angle_dis_count = 0
 
                             print("2237L4 大左转一下  turn003L hole_Angle={}".format(hole_Angle))
                             if real_test:
                                 action_append("turn003L")
                         else:
-                            if Chest_ball_y > 485:
-                                print("2242L4 需要后挪一点 Back1Run Chest_ball_y".format(Chest_ball_y))
+                            if Chest_ball_y > 470:
+                                print("2242L4 需要后挪一点 Back3Run Chest_ball_y".format(Chest_ball_y))
                                 if real_test:
-                                    action_append("Back1Run")
+                                    action_append("Stand")
+                                    action_append("Back3Run")
                                 angle_dis_count = 0
-                            elif Chest_ball_y < 350:
-                                print("2247L4 需要前挪一点 Forwalk00 Chest_ball_y={}".format(Chest_ball_y))
+                            elif Chest_ball_y < 440:
+                                print("2247L4 需要前挪一点 forwalkVeryslow Chest_ball_y={}".format(Chest_ball_y))
                                 if real_test:
-                                    action_append("Forwalk00")
+                                    action_append("forwalkVeryslow")
                                 angle_dis_count = 0
 
                             print("2252L4 左转一下  turn001L hole_Angle={}".format(hole_Angle))
@@ -2244,30 +2179,32 @@ def kick_act_move():
                     # hole_angle_start = False
                 if hole_Angle > 0:
                     # angle
-                    if hole_Angle < 86:
-                        if hole_Angle <= 82:
-                            if Chest_ball_y > 480:
-                                print("2268L4 需要后挪一点 Back2Run Chest_ball_y={}".format(Chest_ball_y))
+                    if hole_Angle < 70:
+                        if hole_Angle <= 65:
+                            if Chest_ball_y > 500:
+                                print("2268L4 需要后挪一点 Back3Run Chest_ball_y={}".format(Chest_ball_y))
                                 if real_test:
-                                    action_append("Back2Run")
+                                    action_append("Stand")
+                                    action_append("Back3Run")
                                 angle_dis_count = 0
-                            elif Chest_ball_y < 350:
-                                print("2273L4 需要前挪一点 Forwalk00 Chest_ball_y={}".format(Chest_ball_y))
+                            elif Chest_ball_y < 440:
+                                print("2273L4 需要前挪一点 forwalkVeryslow Chest_ball_y={}".format(Chest_ball_y))
                                 if real_test:
-                                    action_append("Forwalk00")
+                                    action_append("forwalkVeryslow")
                                 angle_dis_count = 0
 
                             print("2278L4 大右转一下 turn001R hole_Angle={}".format(hole_Angle))
-                            action_append("turn001R")#turn003R 改成了 turn001R zzx 10.14
+                            action_append("turn001R")  # turn003R 改成了 turn001R zzx 10.14
                         else:
-                            if Chest_ball_y > 485:
-                                print("2282L4 需要后挪一点 Back1Run Chest_ball_y={}".format(Chest_ball_y))
-                                action_append("Back1Run")
+                            if Chest_ball_y > 500:
+                                print("2282L4 需要后挪一点 Back3Run Chest_ball_y={}".format(Chest_ball_y))
+                                action_append("Stand")
+                                action_append("Back3Run")
                                 angle_dis_count = 0
-                            elif Chest_ball_y < 350:
-                                print("2286L4 需要前挪一点 Forwalk00 Chest_ball_y={}".format(Chest_ball_y))
-                                if real_test:    
-                                    action_append("Forwalk00")
+                            elif Chest_ball_y < 440:
+                                print("2286L4 需要前挪一点 forwalkVeryslow Chest_ball_y={}".format(Chest_ball_y))
+                                if real_test:
+                                    action_append("forwalkVeryslow")
                                 angle_dis_count = 0
 
                             print("2291L4 右转一下 turn001R ", hole_Angle)
@@ -2281,7 +2218,7 @@ def kick_act_move():
                     # ball_dis_start = True
                     # hole_angle_start = False
 
-                if angle_dis_count > 3:
+                if angle_dis_count > 1:
                     angle_dis_count = 0
                     print("2304L  step step 5555")
                     step = 5
@@ -2291,12 +2228,12 @@ def kick_act_move():
             # print("55555 球与球洞都在")
             # print("2310L 调整红球在左脚正前方不远处，看球洞的位置调整")
             if ball_dis_start:  # 390<y<450  230<x<250
-                if Chest_ball_x < 220:
+                if Chest_ball_x < 220*(4/3):
                     # if 240 - Chest_ball_x > 40:
                     #     print("2314L 需要左侧移 Left02move")
                     #     action_append("Left02move")
                     # else:
-                    if Chest_ball_x < 210:
+                    if Chest_ball_x < 210*(4/3):
                         print("2318L 需要左侧移 Left02move Chest_ball_x={}".format(Chest_ball_x))
                         if real_test:
                             action_append("Left02move")
@@ -2305,12 +2242,12 @@ def kick_act_move():
                         if real_test:
                             action_append("Left1move")
                     angle_dis_count = 0
-                elif Chest_ball_x > 260:
+                elif Chest_ball_x > 260*(4/3):
                     # if Chest_ball_x - 240 > 40:
                     #     print("2328L 需要右侧移 Right02move")
                     #     action_append("Right02move")
                     # else:
-                    if Chest_ball_x > 270:
+                    if Chest_ball_x > 270*(4/3):
                         print("2332L 需要右侧移 Right02move Chest_ball_x={}".format(Chest_ball_x))
                         if real_test:
                             action_append("Right02move")
@@ -2326,20 +2263,21 @@ def kick_act_move():
             if hole_angle_start:
                 if hole_Angle < 0:
                     # angle
-                    if hole_Angle > -87:
+                    if hole_Angle > -70:
                         # y
-                        if Chest_ball_y > 485:
-                            print("2350L 需要后挪一点 Back1Run Chest_ball_y={}".format(Chest_ball_y))
+                        if Chest_ball_y > 515:
+                            print("2350L 需要后挪一点 Back3Run Chest_ball_y={}".format(Chest_ball_y))
                             if real_test:
-                                action_append("Back1Run")
+                                action_append("Stand")
+                                action_append("Back3Run")
                             angle_dis_count = 0
-                        elif Chest_ball_y < 390:
-                            print("2355L 需要前挪一点 Forwalk00  Chest_ball_y={}".format(Chest_ball_y))
+                        elif Chest_ball_y < 460:
+                            print("2355L 需要前挪一点 forwalkVeryslow  Chest_ball_y={}".format(Chest_ball_y))
                             if real_test:
-                                action_append("Forwalk00")
+                                action_append("forwalkVeryslow")
                             angle_dis_count = 0
 
-                        if hole_Angle >= -82:
+                        if hole_Angle >= -65:
                             print("2361L 大左转一下  turn001L hole_Angle={}".format(hole_Angle))
                             if real_test:
                                 action_append("turn001L")
@@ -2355,20 +2293,21 @@ def kick_act_move():
                     hole_angle_start = False
                 if hole_Angle > 0:
                     # angle
-                    if hole_Angle < 87:
+                    if hole_Angle < 70:
                         # y
-                        if Chest_ball_y > 485:
-                            print("2379L 需要后挪一点 Back1Run Chest_ball_y={}".format(Chest_ball_y))
+                        if Chest_ball_y > 515:
+                            print("2379L 需要后挪一点 Back3Run Chest_ball_y={}".format(Chest_ball_y))
                             if real_test:
-                                action_append("Back1Run")
+                                action_append("Stand")
+                                action_append("Back3Run")
                             angle_dis_count = 0
-                        elif Chest_ball_y < 390:
-                            print("2384L 需要前挪一点 Forwalk00 Chest_ball_y={}".format(Chest_ball_y))
+                        elif Chest_ball_y < 480:
+                            print("2384L 需要前挪一点 forwalkVeryslow Chest_ball_y={}".format(Chest_ball_y))
                             if real_test:
-                                action_append("Forwalk00")
+                                action_append("forwalkVeryslow")
                             angle_dis_count = 0
 
-                        if hole_Angle <= 82:
+                        if hole_Angle <= 65:
                             print("2390L 大右转一下 turn001R hole_Angle={}".format(hole_Angle))
                             if real_test:
                                 action_append("turn001R")
@@ -2383,37 +2322,37 @@ def kick_act_move():
                     ball_dis_start = True
                     hole_angle_start = False
 
-                if angle_dis_count > 2:
+                if angle_dis_count > 1:
                     angle_dis_count = 0
                     step = 6
 
 
         elif step == 6:
             # print("666")
-            if Chest_ball_angle > 88 and hole_Angle > 88:
+            if Chest_ball_angle > 75 and hole_Angle > 75:
                 ball_hole_angle_ok = True
-            if Chest_ball_angle < -88 and hole_Angle > 88:
+            if Chest_ball_angle < -75 and hole_Angle > 75:
                 ball_hole_angle_ok = True
-            if Chest_ball_angle < -88 and hole_Angle < -88:
+            if Chest_ball_angle < -75 and hole_Angle < -75:
                 ball_hole_angle_ok = True
-            if Chest_ball_angle > 88 and hole_Angle < -88:
+            if Chest_ball_angle > 75 and hole_Angle < -75:
                 ball_hole_angle_ok = True
 
-            if Chest_ball_angle > 86 and hole_Angle > 86 and ball_hole_angle_ok == False:
+            if Chest_ball_angle > 73 and hole_Angle > 73 and ball_hole_angle_ok == False:
                 print("2421L 右转一点点 turn001R")
                 if real_test:
                     action_append("turn001R")
-            elif Chest_ball_angle < -86 and hole_Angle < -86 and ball_hole_angle_ok == False:
+            elif Chest_ball_angle < -73 and hole_Angle < -73 and ball_hole_angle_ok == False:
                 print("2425L 左转一点点 turn001L")
                 if real_test:
                     action_append("turn001L")
-            elif Chest_ball_y <= 440:
-                print("2429L 向前挪动一点点 Forwalk00")
+            elif Chest_ball_y <= 460:
+                print("2429L 向前挪动一点点 forwalkVeryslow")
                 if real_test:
-                    action_append("Forwalk00")
+                    action_append("forwalkVeryslow")
                     # action_append("turn001R")
 
-            elif hole_x > 250:
+            elif hole_x > 250*(4/3):
                 print("step = 6  方向偏左了, 往右转 turn001R hole_x={}".format(hole_x))
                 if real_test:
                     action_append("turn001R")
@@ -2422,18 +2361,19 @@ def kick_act_move():
                 step = 7
 
         elif step == 7:
-            if Chest_ball_y > 505:
+            if Chest_ball_y > 515:
                 print("2444L 靠太近了，向后挪动一点点 Back0Run Chest_ball_y={} > 500".format(Chest_ball_y))
                 if real_test:
-                    action_append("Back2Run")
+                    action_append("Stand")
+                    action_append("Back3Run")
 
             # elif 80 < Chest_ball_angle < 85:
             #     print("2449L 右转一点点 turn000R")
             #     if real_test:
             #         action_append("turn000R")
-            
-            elif Chest_ball_x > 203:  # 210
-                if Chest_ball_x > 220:
+
+            elif Chest_ball_x > 203*(4/3):  # 210
+                if Chest_ball_x > 220*(4/3):
                     print("2455L step = 7 向右移动 Right02move Chest_ball_x={} > 200".format(Chest_ball_x))
                     if real_test:
                         action_append("Right02move")
@@ -2443,8 +2383,8 @@ def kick_act_move():
                     if real_test:
                         action_append("Right1move")
                         time.sleep(sleep_time_s)
-            elif Chest_ball_x < 180:
-                if Chest_ball_x < 175:
+            elif Chest_ball_x < 180*(4/3):
+                if Chest_ball_x < 175*(4/3):
                     print("2466L step = 7 向左移动 Left02move Chest_ball_x={} < 175".format(Chest_ball_x))
                     if real_test:
                         action_append("Left02move")
@@ -2454,19 +2394,18 @@ def kick_act_move():
                     if real_test:
                         action_append("Left1move")
                         time.sleep(sleep_time_s)
-            elif Chest_ball_y < 440:
-                print("2476L  step = 7 向前挪动一点点 Forwalk00 Chest_ball_y={} < 490".format(Chest_ball_y))
+            elif Chest_ball_y < 470:
+                print("2476L  step = 7 向前挪动一点点 forwalkVeryslow Chest_ball_y={} < 490".format(Chest_ball_y))
                 if real_test:
-                    action_append("Forwalk00")
+                    action_append("forwalkVeryslow")
                     time.sleep(sleep_time_l)
                     action_append("turn000R")
 
             # elif hole_Angle >80:
-            #     print("站位有问题，后退， 重整 Back2Run")
+            #     print("站位有问题，后退， 重整 Back3Run")
             #     step = 5
             #     if real_test:
-            #         action_append("Back2Run")
-
+            #         action_append("Back3Run")
 
             else:
                 print("2490L 踢球踢球阶段 LfootShot")
@@ -2475,45 +2414,50 @@ def kick_act_move():
 
         elif step == 8:
             if real_test:
-                if Chest_ball_y > 505:
+                if Chest_ball_y > 515:
                     print("向后退")
-                    action_append("Back1Run")
+                    action_append("Stand")
+                    action_append("Back3Run")
 
-                elif Chest_ball_angle > 83.75 or Chest_ball_angle <= 0:
-                    if Chest_ball_angle <= 0 or Chest_ball_angle > 85:
+                elif Chest_ball_angle > 80 or Chest_ball_angle <= 0:
+                    if Chest_ball_angle <= 0 or Chest_ball_angle > 82:
                         print("右移一大步")
                         action_append("Right02move")
                     else:
                         print("右移一小步")
                         action_append("Right1move")
 
-                elif Chest_ball_angle < 82.25:
-                    if Chest_ball_angle < 81:
+                elif Chest_ball_angle < 77:
+                    if Chest_ball_angle < 75:
                         print("左移一大步")
                         action_append("Left02move")
                     else:
                         print("左移一小步")
                         action_append("Left1move")
 
-                elif hole_Angle < -87.5 or hole_Angle > 0:
+                elif hole_Angle < -80 or hole_Angle > 0:
                     print("右转左移")
                     action_append("turn001R")
+                    action_append("Stand")
                     action_append("Left1move")
 
-                elif hole_Angle > -84.5:
+                elif hole_Angle > -75:
                     print("左转右移")
                     action_append("turn001L")
+                    action_append("Stand")
                     action_append("Right1move")
 
-                elif Chest_ball_y < 460:
+                elif Chest_ball_y < 490:
                     print("2527L  step = 7 向前挪动一点点 Forwalk00 Chest_ball_y={} < 490".format(Chest_ball_y))
                     if real_test:
-                        action_append("Forwalk00")
+                        action_append("forwalkVeryslow")
                         time.sleep(sleep_time_l)
                         # action_append("turn000R")
 
                 else:
                     print("准备踢球")
+                    action_append("Stand")
+                    time.sleep(0.5)
                     action_append("LfootShot")
                     step = 9
                     if real_test:
@@ -2522,20 +2466,20 @@ def kick_act_move():
                         action_append("turn005L")
                         action_append("turn005L")
                         action_append("turn005L")
-                        # action_append("fastForward03")
+                        # action_append("Forwalk01")
 
 
         elif step == 9:
-            for i in range(0,3):
+            for i in range(0, 3):
                 if edge_angle('red_floor') == 1:
-                    action_append("fastForward03")
+                    action_append("Forwalk01")
                     if i == 1:
                         action_append("Right3move")
-            
+
             action_append("HeadTurnMM")
             action_append("Right3move")
             action_append("Right3move")
-            action_append("fastForward03")
+            action_append("Forwalk01")
             action_append("fastorward_step")
             print("完成！ 77777")
             state = -1
@@ -2556,45 +2500,30 @@ def kick_ball():
     step = -1
     state = 7
 
-    
-
     while state == 7:
         if -1 <= step < 9:  # 踢球的七步
-
-
-
             ChestOrg = ChestOrg_img.copy()
             ChestOrg = np.rot90(ChestOrg)
-
-            Hole_OrgFrame = ChestOrg.copy()
+            HeadOrg = HeadOrg_img.copy()
+            Hole_OrgFrame = HeadOrg.copy()
+            Hole_OrgFrame = cv2.resize(Hole_OrgFrame, (int(640), int(640)))
             Ball_OrgFrame = ChestOrg.copy()
+            Ball_OrgFrame = cv2.resize(Ball_OrgFrame, (int(640), int(640)))
 
             img_h, img_w = Hole_OrgFrame.shape[:2]
 
             # 把上中心点和下中心点200改为640/2  fftest
-            bottom_center = (int(240), int(img_h))  # 图像底中点
-            top_center = (int(240), int(0))  # 图像顶中点
+            bottom_center = (int(320), int(img_h))  # 图像底中点
+            top_center = (int(320), int(0))  # 图像顶中点
             # bottom_center = (int(640/2), int(img_h))  #图像底中点
             # top_center = (int(640/2), int(0))     #图像顶中点
 
             # 开始处理图像
             Hole_hsv = cv2.cvtColor(Hole_OrgFrame, cv2.COLOR_BGR2HSV)
-            Hole_hsv = cv2.GaussianBlur(Hole_hsv, (5, 5), 0)
 
-            Hole_Imask = cv2.inRange(Hole_hsv, color_range['blue_hole'][0], color_range['blue_hole'][1])
-            Hole_Imask = cv2.erode(Hole_Imask, None, iterations=1)
+            Hole_Imask = cv2.inRange(Hole_hsv, color_range['blue_hole'][0], color_range['blue_hole'][1])    # 识别到洞
             Hole_Imask = cv2.dilate(Hole_Imask, np.ones((5, 5), np.uint8), iterations=3)
-
-            # cv2.imshow("Hole_Imask", Hole_Imask)
-            # cv2.waitKey(0)
-
-            # canny = cv2.Canny(Hole_Imask, 0, 255)
-            # cv2.imshow("Cannyed", canny)
-            # cv2.waitKey(0)
-
-            # cv2.imshow('hole_mask', Hole_Imask)      # hole mask
-            # print('Press a key to continue:')
-            # cv2.waitKey(0)
+            Hole_Imask = cv2.erode(Hole_Imask, np.ones((3, 3), np.uint8), iterations=3)
 
             # 初始化
             hole_center = [0, 0]
@@ -2614,7 +2543,8 @@ def kick_ball():
             hole_x = 0
             hole_y = 0
 
-            _, cnts, hierachy = cv2.findContours(Hole_Imask, cv2.RETR_LIST,cv2.CHAIN_APPROX_NONE)  # **获得图片轮廓值  #遍历图像层级关系
+            _, cnts, hierachy = cv2.findContours(Hole_Imask, cv2.RETR_CCOMP,
+                                                 cv2.CHAIN_APPROX_NONE)  # **获得图片轮廓值  #遍历图像层级关系
             # *取得一个球洞的轮廓*
             for i in range(0, len(cnts)):  # 初始化sum_contours，使其等于其中一个c，便于之后拼接的格式统一
                 # cv2.drawContours(Hole_OrgFrame, cnts[i], -1, (0, 0, 255), 1)
@@ -2626,13 +2556,12 @@ def kick_ball():
                 # if img_debug and area > 100:
                 #     cv2.putText(Hole_OrgFrame, "area:" + str(area), (10, Hole_OrgFrame.shape[0] - 55),
                 #                 cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 1)
-                if 640 * 480 * 0.0005 < area < 640 * 480 * 0.45:  # 去掉很小的干扰轮廓以及最大的图像边界
-                    e = cv2.fitEllipse(cnts[i])
-                    # print("e={} 等待".format(e))
-                    # cv2.waitKey(0)
-                    area2 = np.pi*e[1][0]*e[1][1]
+                if 640 * 480 * 0.0033 < area < 640 * 480 * 0.45:  # 去掉很小的干扰轮廓以及最大的图像边界
+                    e = cv2.fitEllipse(cnts[i])     # 拟合椭圆，获得ellipse =  [ (x, y) , (a, b), angle ]。（x, y）代表椭圆中心点的位置；
+                                                    # （a, b）代表长短轴长度，应注意a、b为长短轴的直径，而非半径；angle 代表了中心旋转的角度
+                    area2 = np.pi * e[1][0] * e[1][1]
                     # print("ratio:{}".format(area/area2))
-                    if area/area2 > 0.05 and np.abs(90-e[2]) < 45:
+                    if area / area2 > 0.05 and np.abs(90 - e[2]) < 90:      # 不太懂这个判断条件的意义
                         if temp < e[0][1]:
                             temp = e[0][1]
                             temp_e = e
@@ -2642,36 +2571,14 @@ def kick_ball():
                             continue
                     # break
                 else:
-                    # cv2.drawContours(Hole_OrgFrame, cnts, -1, (0, 0, 255), 3)
                     continue
-            # for c in cnts:
-            #     area = cv2.contourArea(c)  # 计算轮廓面积
-            #     if 640 * 480 * 0.0005 < area < 640 * 480 * 0.45:
-            #         sum_contours = np.concatenate((sum_contours, c), axis=0)  # 数组拼接
-            #         # cv2.drawContours(Hole_OrgFrame, c, -1, (0, 255, 0), 3)
-            #     else:
-            #         cv2.drawContours(Hole_OrgFrame, c, -1, (0, 0, 255), 1)
-            #         continue
-            # print("area : {} e[0][0]={} e[0][1]={}".format(temp_area, temp_e[0][0], temp_e[0][1]))
 
-            # cv2.waitKey(0)
             if temp_i == -1:
                 print("没有找到洞")
                 hole_flag = False
             else:
                 cnt_large = cnts[temp_i]
                 cv2.ellipse(Hole_OrgFrame, temp_e, (255, 255, 255), 1)
-                # cv2.imshow("Hole_OrgFrame", Hole_OrgFrame)
-                # cv2.waitKey(0)
-            # sum_area = cv2.contourArea(cnts[temp_i])  # 计算轮廓面积
-            # cv2.drawContours(Hole_OrgFrame, sum_contours, -1, (0, 0, 255), 2)
-            # print("sum_contours_area = {}".format(sum_area))
-            # cv2.imshow("Hole_OrgFrame", Hole_OrgFrame)
-            # cv2.waitKey(0)
-            # if sum_area > 3:
-            #     cnt_large = sum_contours
-            # else:
-            #     cnt_large = None
                 hole_flag = True
                 (hole_x, hole_y), radius = cv2.minEnclosingCircle(cnt_large)  # 最小内接圆形
                 hole_center = (int(hole_x), int(hole_y))
@@ -2699,154 +2606,73 @@ def kick_ball():
                 cv2.putText(Hole_OrgFrame, "hole_flag:" + str(hole_flag),
                             (10, Hole_OrgFrame.shape[0] - 95), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
 
-                # cv2.imshow("Hole_OrgFrame", Hole_OrgFrame)
-                # cv2.waitKey(0)
-
             # chest 红球处理
             Chest_ball_x = 0
             Chest_ball_y = 0
-            #模板匹配，远距离靠近
-            if step == -2:
+            # 模板匹配，远距离靠近
+            if step == -2:      # 该部分没有办法进入
                 template = cv2.imread('//home//pi//RunningRobot_test//template.jpg')
                 w = template.shape[0]
                 h = template.shape[1]
 
                 meth = 'cv2.TM_SQDIFF_NORMED'
                 method = eval(meth)
-                res = cv2.matchTemplate(Ball_OrgFrame,template,method)
+                res = cv2.matchTemplate(Ball_OrgFrame, template, method)
                 min_val, max_val, top_left, max_loc = cv2.minMaxLoc(res)
                 bottom_right = (top_left[0] + w, top_left[1] + h)
-                cv2.rectangle(Ball_OrgFrame,top_left, bottom_right, 255, 2)
-                Chest_ball_x = int(top_left[0] + w/2)
-                Chest_ball_y = int(top_left[1] + h/2)
+                cv2.rectangle(Ball_OrgFrame, top_left, bottom_right, 255, 2)
+                Chest_ball_x = int(top_left[0] + w / 2)
+                Chest_ball_y = int(top_left[1] + h / 2)
                 Chest_ball_flag = True
-            # Ball_OrgFrame_clip = Ball_OrgFrame[ : , 0:550]
-            # Chest_radius, Chest_circle_x, Chest_circle_y = detect(Ball_OrgFrame_clip)
-            # cv2.imshow("Org", Ball_OrgFrame)
-            # if Chest_radius > 40 or Chest_radius < 20:
-            #     Chest_ball_flag = False
-            #     print("没有找到球")
-            #     cv2.imshow("cliped", Ball_OrgFrame_clip)
-            #     cv2.waitKey(0)
-            #     cv2.destroyAllWindows();
-            #     continue;
 
-            # else:
-            #     Chest_ball_flag = True
-            #     Chest_ball_center = (int(Chest_circle_x), int(Chest_circle_y))
-            #     Chest_radius = int(Chest_radius)
-            #     cv2.circle(Ball_OrgFrame, Chest_ball_center, Chest_radius, (100, 200, 20), 2)
-            #     cv2.line(Ball_OrgFrame, Chest_ball_center, top_center, (0, 100, 0), 2)
-            #     if (Chest_ball_center[0] - top_center[0]) == 0:
-            #         Chest_ball_angle = 90
-            #     else:
-            #         # *Chest_ball_angle*  (y1-y0)/(x1-x0)
-            #         Chest_ball_angle = - math.atan((Chest_ball_center[1] - top_center[1]) / (
-            #                 Chest_ball_center[0] - top_center[0])) * 180.0 / math.pi
-
-            #     Chest_ball_x = int(Chest_circle_x)  # *ball_x*
-            #     Chest_ball_y = int(Chest_circle_y)  # *ball_y*
-            #     if img_debug:
-            #         cv2.putText(Ball_OrgFrame, "step:" + str(step),
-            #                     (10, Ball_OrgFrame.shape[0] - 35), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
-            #         cv2.putText(Ball_OrgFrame, "Chest_ball_x:" + str(Chest_ball_x),
-            #                     (10, Ball_OrgFrame.shape[0] - 75), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
-            #         cv2.putText(Ball_OrgFrame, "Chest_ball_y:" + str(Chest_ball_y),
-            #                     (220, Ball_OrgFrame.shape[0] - 75), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
-            #         cv2.putText(Ball_OrgFrame, "Chest_ball_flag:" + str(Chest_ball_flag),
-            #                     (10, Hole_OrgFrame.shape[0] - 95), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
-            #         cv2.putText(Ball_OrgFrame, "ball_angle:" + str(Chest_ball_angle),
-            #                     (10, Ball_OrgFrame.shape[0] - 115), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
             else:
-                if step <= 1:
-                    dil_kernelSize = 5
-                    mor_kernelSize = 5
-                elif step == 4:
-                    dil_kernelSize = 5
-                    mor_kernelSize = 7
+                if step < 4:
+                    e_kernelSize = 3
                 else:
-                    dil_kernelSize = 7
-                    mor_kernelSize = 13
+                    e_kernelSize = 5
 
-                # Chest_radius, Chest_circle_x, Chest_circle_y = detect(Ball_OrgFrame_clip)
-                # if Chest_radius < 0.1:
-                #     Chest_ball_flag = False
-                #     print("没有找到球")
-                #     cv2.waitKey(0)
-                #     continue;
 
-                # else:
-                #     Chest_ball_flag = True
-                #     Chest_ball_center = (int(Chest_circle_x), int(Chest_circle_y))
-                #     Chest_radius = int(Chest_radius)
-                #     cv2.circle(Ball_OrgFrame, Chest_ball_center, Chest_radius, (100, 200, 20), 2)
-                #     cv2.line(Ball_OrgFrame, Chest_ball_center, top_center, (0, 100, 0), 2)
-                #     if (Chest_ball_center[0] - top_center[0]) == 0:
-                #         Chest_ball_angle = 90
-                #     else:
-                #         # *Chest_ball_angle*  (y1-y0)/(x1-x0)
-                #         Chest_ball_angle = - math.atan((Chest_ball_center[1] - top_center[1]) / (
-                #                 Chest_ball_center[0] - top_center[0])) * 180.0 / math.pi
-
-                #     Chest_ball_x = int(Chest_circle_x)  # *ball_x*
-                #     Chest_ball_y = int(Chest_circle_y)  # *ball_y*
-
-                
-
-                
                 Chest_Ball_hsv = cv2.cvtColor(Ball_OrgFrame, cv2.COLOR_BGR2HSV)
-                Chest_Ball_hsv = cv2.GaussianBlur(Chest_Ball_hsv, (3, 3), 0)
+                # Chest_Ball_hsv = cv2.GaussianBlur(Chest_Ball_hsv, (3, 3), 0)
 
-                Chest_Ball_Imask_1 = cv2.inRange(Chest_Ball_hsv, color_range['d_red_ball_floor1'][0],
-                                            color_range['d_red_ball_floor1'][1])
-                Chest_Ball_Imask_2 = cv2.inRange(Chest_Ball_hsv, color_range['d_red_ball_floor2'][0],
-                                            color_range['d_red_ball_floor2'][1])
-                Chest_Ball_Imask = cv2.bitwise_or(Chest_Ball_Imask_1, Chest_Ball_Imask_2)
-                Chest_Ball_Imask = cv2.dilate(Chest_Ball_Imask, np.ones((dil_kernelSize, dil_kernelSize), np.uint8), iterations=1)
-
-                _, Ball_Imask1_INV = cv2.threshold(Chest_Ball_Imask, 127, 255, cv2.THRESH_BINARY_INV)
-                Ball_Imask1_INV = cv2.erode(Ball_Imask1_INV, None, iterations=3)
-                Chest_Ball_Imask = cv2.morphologyEx(Ball_Imask1_INV, cv2.MORPH_OPEN, np.ones((mor_kernelSize, mor_kernelSize), np.uint8),iterations=1)
-                
+                # Chest_Ball_Imask_1 = cv2.inRange(Chest_Ball_hsv, color_range['d_red_ball_floor1'][0],
+                #                                  color_range['d_red_ball_floor1'][1])
+                # Chest_Ball_Imask_2 = cv2.inRange(Chest_Ball_hsv, color_range['d_red_ball_floor2'][0],
+                #                                  color_range['d_red_ball_floor2'][1])
+                # Chest_Ball_Imask = cv2.bitwise_or(Chest_Ball_Imask_1, Chest_Ball_Imask_2)
+                Chest_Ball_Imask = cv2.inRange(Chest_Ball_hsv,color_range['kick_ball_rec'][0],color_range['kick_ball_rec'][1])
+                Chest_Ball_Imask = cv2.erode(Chest_Ball_Imask, np.ones((e_kernelSize, e_kernelSize), np.uint8), iterations=2)
+                Chest_Ball_Imask = cv2.morphologyEx(Chest_Ball_Imask, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8),iterations=1)
 
                 # cv2.imshow("red_floor_INV", Chest_Ball_Imask)
                 # cv2.waitKey(0)
                 # Chest_Ball_Imask = cv2.inRange(Chest_Ball_hsv, color_range['ball_red'][0], color_range['ball_red'][1])
-                
+
                 # Chest_Ball_Imask = cv2.erode(Chest_Ball_Imask, None, iterations=5)
                 # Chest_Ball_Imask = cv2.dilate(Chest_Ball_Imask, np.ones((7, 7), np.uint8), iterations=2)
                 # cv2.imshow("red_ball", Chest_Ball_Imask)
                 # cv2.waitKey(0)
 
-
                 _, cnts2, hierachy2 = cv2.findContours(Chest_Ball_Imask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
                 if cnts2 is not None:
-                    for i in range(0, len(cnts2)):  # 初始化sum_contours，使其等于其中一个c，便于之后拼接的格式统一
-                        # if img_debug:
-                            # cv2.drawContours(Ball_OrgFrame, cnts2[i], -1, (0, 0, 255), 1)
-                            # cv2.imshow("Contours", Ball_OrgFrame)
-                            # cv2.waitKey(0)
+                    for i in range(0, len(cnts2)):
                         area = cv2.contourArea(cnts2[i])  # 计算轮廓面积
                         if img_debug:
-                            print(len(cnts2))
-                            print("area={}".format(area))
+                            # print(len(cnts2))
+                            # print("area={}".format(area))
                             if area > 100:
                                 cv2.putText(Ball_OrgFrame, "area:" + str(area), (10, Ball_OrgFrame.shape[0] - 55),
-                                                cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 1)
-                        if 500 < area < 640 * 480 * 0.025:  # 去掉很小的干扰轮廓以及最大的图像边界
+                                            cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 1)
+                        if 300 < area < 640 * 480 * 0.025:  # 去掉很小的干扰轮廓以及最大的图像边界
                             if cnts2[i].size > 10:
-                                # print(cnts2[i].size)
-                                
                                 e = cv2.fitEllipse(cnts2[i])
-                                area2 = np.pi*e[1][0]*e[1][1]
+                                area2 = np.pi * e[1][0] * e[1][1]
                                 # print("e={} 等待".format(e))
                                 # print("ratio:{}".format(area/area2))
-                                if img_debug:
-                                    cv2.ellipse(Ball_OrgFrame, e, (255, 255, 255), 1)
-                                bias = abs(1 - e[1][0]/e[1][1]) 
+                                bias = abs(1 - e[1][0] / e[1][1])
                                 # cv2.waitKey(0)
-                                if ((step < 4 and np.abs(e[1][0] - e[1][1]) < 20 and area/area2 > 0.1) or (step >= 4 and np.abs(e[1][0] - e[1][1]) < 50)) and e[0][1] < 550:
-                                    
+                                if ((step < 4 and area / area2 > 0.05 and 290 < e[0][1] < 550) or (step >= 4 and 400 < e[0][1] < 550)) and \
+                                        (e[1][1]/e[1][0] < 2.3):
                                     if temp_b > bias:
                                         temp_b = bias
                                         temp_b_e = e
@@ -2858,8 +2684,6 @@ def kick_ball():
                             else:
                                 continue
                             # cv2.waitKey(0)
-
-
 
                             # break
                         else:
@@ -2916,7 +2740,6 @@ def kick_ball():
 
         if img_debug:
             cv2.imshow("Ball_OrgFrame", Ball_OrgFrame)
-            cv2.waitKey(10)
             cv2.imshow("Hole_OrgFrame", Hole_OrgFrame)
             cv2.waitKey(10)
         kick_act_move()
