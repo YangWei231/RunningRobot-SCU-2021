@@ -1358,9 +1358,9 @@ def door_act_move():
                 time.sleep(sleep_time_l)
 
         elif Top_center_y < step0_close:
-            print("1366L step = 0 距离门很近了, 后退一点 Back2Run Top_center_y={} < {}".format(Top_center_y, step0_close))
+            print("1366L step = 0 距离门很近了, 后退一点 Back3Run Top_center_y={} < {}".format(Top_center_y, step0_close))
             if real_test:
-                action_append("Back2Run")
+                action_append("Back3Run")
                 time.sleep(sleep_time_l)
 
         elif angle_top < step0_angle_top_R:
@@ -1415,7 +1415,7 @@ def door_act_move():
         if Top_lenth < 100:
             print("1421L 歪了！ 左转， 再向右移")
             if real_test:
-                action_append("Back1Run")
+                action_append("Back3Run")
                 action_append("Right02move")
 
         elif angle_top > step1_angle_top_L or 0 < Angle < 85:
@@ -1431,14 +1431,14 @@ def door_act_move():
         
         elif Bottom_center_x < step1_head_bottom_x_F:
             if Bottom_center_x < step1_head_bottom_x_F - step1_delta:
-                print("1439L step = 1 站位很靠前了，向后移 Back2Run Bottom_center_x={} < {}".format(Bottom_center_x, step1_head_bottom_x_F - step1_delta))
+                print("1439L step = 1 站位很靠前了，向后移 Back3Run Bottom_center_x={} < {}".format(Bottom_center_x, step1_head_bottom_x_F - step1_delta))
                 if real_test:
-                    action_append("Back2Run")
+                    action_append("Back3Run")
                     time.sleep(sleep_time_s)
             else:
-                print("1444L step = 1 站位靠前了，向后移 Back1Run Bottom_center_x={} < {}".format(Bottom_center_x, step1_head_bottom_x_F))
+                print("1444L step = 1 站位靠前了，向后移 Back3Run Bottom_center_x={} < {}".format(Bottom_center_x, step1_head_bottom_x_F))
                 if real_test:
-                    action_append("Back1Run")
+                    action_append("Back3Run")
                     time.sleep(sleep_time_s)
         
         elif Bottom_center_x > step1_head_bottom_x_B:
@@ -1465,14 +1465,14 @@ def door_act_move():
 
     elif step == 2:
         print("-------/////////////////过门 Left3move x 4")
-        # action_append("Back2Run")
+        # action_append("Back3Run")
         for i in range(0, step2_get_close):
             if real_test:
                 action_append("Left3move")
                 time.sleep(sleep_time_l)
-        # print("向后退一点！ Back1Run")
+        # print("向后退一点！ Back3Run")
         # if real_test:
-        #     action_append("Back1Run")
+        #     action_append("Back3Run")
 
         # cv2.waitKey(0)
 
@@ -2927,7 +2927,7 @@ def baffle():
                 action_append("turn004L")
                 action_append("turn004L")
                 action_append("turn001L")
-                action_append("Back2Run")
+                action_append("Back3Run")
                 # action_append("turn004L")
                 # action_append("turn004L")
                 
