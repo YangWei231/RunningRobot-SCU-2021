@@ -23,7 +23,6 @@ door_rec = False
 kick_ball_rec = False
 floor_rec = False
 
-
 img_debug = 0
 action_DEBUG = False
 box_debug = False
@@ -1731,228 +1730,11 @@ head_state = 0  # 90 ~ -90      左+90   右-90
 
 hole_x = 0
 hole_y = 0
-
+jump_count = 0
 count = 0
-
 angle_dis_count = 0
 picnum = 0
 fast_run = True
-
-'''
-###################################################边缘检测，利用弧线检测圆（舍去）
-def getran():
-    return random.randint(0,256)
-
-def circleLeastFit(points):  
-    N =len(points) 
-    sum_x = 0
-    sum_y = 0
-    sum_x2 = 0
-    sum_y2 = 0
-    sum_x3 = 0
-    sum_y3 = 0
-    sum_xy = 0
-    sum_x1y2 = 0
-    sum_x2y1 = 0
-    for  i in range(N) :
-        x = float(points[i][0][0])
-        y = float(points[i][0][1])        
-        x2 = x * x
-        y2 = y * y
-        sum_x += x
-        sum_y += y
-        sum_x2 += x2
-        sum_y2 += y2
-        sum_x3 += x2 * x
-        sum_y3 += y2 * y
-        sum_xy += x * y
-        sum_x1y2 += x * y2
-        sum_x2y1 += x2 * y    
-    C = N * sum_x2 - sum_x * sum_x
-    D = N * sum_xy - sum_x * sum_y
-    E = N * sum_x3 + N * sum_x1y2 - (sum_x2 + sum_y2) * sum_x
-    G = N * sum_y2 - sum_y * sum_y
-    H = N * sum_x2y1 + N * sum_y3 - (sum_x2 + sum_y2) * sum_y
-    a = (H * D - E * G) / (C * G - D * D+1e-100)
-    b = (H * C - E * D) / (D * D - G * C+1e-100)
-    c = -(a * sum_x + b * sum_y + sum_x2 + sum_y2) / N
-    centerx = a / (-2)
-    centery = b / (-2)
-    rad = np.sqrt(a * a + b * b - 4 * c) / 2
-    return centerx,centery,rad
-
-def inImg(bound,x,y):
-    return x >= 0 and x <= bound[1] + 10 and y >= 0 and y <= bound[0] + 10
-
-def checkcenter(bound,x,y,r):
-    return inImg(bound,x-r,y) and inImg(bound,x+r,y) and inImg(bound,x,y-r) and inImg(bound,x,y+r)
-
-def isArc(points,centerx,centery,rad):
-    #print(rad)
-    e = 0
-    n = len(points)
-    for p in points:
-        dis = np.sqrt((p[0][0]-centerx)**2 + (p[0][1]-centery)**2)
-        e += (dis - rad) **2
-    e /= n - 1
-    return e < 5
-
-def getdist_p2l(p,la,lb):
-    A = la[1] - lb[1]
-    B = lb[0] - la[0]
-    C = la[0] * lb[1] - la[1] * lb[0]
-    return np.abs(A*p[0] + B * p[1] + C) / np.sqrt(A*A + B*B)
-
-def getdist_p2p(pa,pb):
-    return np.sqrt((pa[0]-pb[0])**2 + (pa[1] - pb[1])**2)
-
-def getdist_p2p_2(pa,pb):
-    return (pa[0] - pb[0])**2 + (pa[1] - pb[1])**2
-
-def chk_line(countor,img):
-    points = [x[0] for x in countor]
-    [_vx, _vy, _x, _y] = cv2.fitLine(np.array(points), cv2.DIST_L2, 0, 0.01, 0.01)
-    #cv2.line(img,(x,y),(x + vx*100,y + vy * 100),(0,0,255),2)
-    tot = sum([getdist_p2l(o,(_x,_y),(_x + _vx * 100,_y + _vy * 100))**2 for o in points]) / len(points)
-    #print(tot)
-    return tot
-
-def chkCountor(countor,bound,temp,arcs,total_arcs):
-    #debug
-    # global tot_label
-    # tot_label += 1
-    
-    len_lim = min(min(bound) / 10,100)
-    if len(countor) < len_lim: return
-    
-    #debug
-    # nowc = (getran(),getran(),getran())
-    # if(tot_label == 370):
-    #     p = 0
-
-    # drawpoints(temp,countor,nowc)
-    # putlabel(temp,countor,str(tot_label))
-
-    centerx,centery,rad = circleLeastFit(countor)
-    if rad < 20 or rad > 40: return
-    if not checkcenter(bound,centerx,centery,rad): return 
-    if isArc(countor,centerx,centery,rad):
-        result = chk_line(countor,arcs)
-        if result < 0.5: return
-        
-        #debug
-        # putlabel(arcs,countor,str(result))
-        # drawpoints(arcs,countor,nowc)
-        # cv2.circle(arcs,(int(centerx),int(centery)),2,nowc)
-        
-        total_arcs.append((countor,centerx,centery,rad))
-        return rad,centerx,centery
-    else: return
-
-def postCountor(countor,bound,temp,arcs,total_arcs):
-    countor = list(countor)
-    cx,cy,rad = circleLeastFit(countor)
-    #print(type(countor))
-    countor.sort(key=lambda p:np.arctan2(p[0][1]-cy,p[0][0]-cx))
-    chkCountor(countor,bound,temp,arcs,total_arcs)
-    # len_lim = int(np.ceil(max(min(min(bound) / 10,100) * 3,len(countor) * 1)))
-    # l ,r = 0, len_lim
-    # while(l < len(countor)):
-    #     chkCountor(countor[l:min(r,len(countor))],bound,temp,arcs)
-    #     l = r
-    #     r += len_lim
-
-def chkrad(x,y):
-    return x/y > 0.5 and x/y < 2
-
-def c_contains_p(point,cx,cy,rad):
-    return getdist_p2p(point,(cx,cy)) < rad
-
-def chkarc(arc1,arc2,total_circles):
-    now = arc1[0].copy()
-    now.extend(arc2[0])
-    centerx,centery,rad = circleLeastFit(now)
-    if chkrad(arc1[3],rad) and chkrad(arc2[3],rad) and c_contains_p((arc1[1],arc1[2]),centerx,centery,rad) and c_contains_p((arc2[1],arc2[2]),centerx,centery,rad):
-        total_circles.append((rad,centerx,centery))
-
-def getbox(r,cx,cy,bound,lin=2):
-    upx = max(int(cx - r - lin),0)
-    upy = max(int(cy - r - lin),0)
-    dox = min(int(cx + r + lin),bound[1] - 1)
-    doy = min(int(cy + r + lin),bound[0] - 1)
-    return upx,upy,dox,doy
-
-def detect(readimg):
-    bound = (readimg.shape[0],readimg.shape[1])
-    total_arcs,total_circles = [],[]
-    #print(bound)
-    #img = cv2.morphologyEx(readimg,cv2.MORPH_OPEN,kernel=(3,3),iterations=1)
-    img = readimg.copy()
-    img = cv2.medianBlur(readimg,5)
-    edges = cv2.Canny(img,150,100)
-    edges = cv2.morphologyEx(edges,cv2.MORPH_OPEN,kernel=(1,1),iterations=1)
-    edges = cv2.adaptiveThreshold(edges,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,21,0)
-    
-    #debug
-    # cv2.imshow("edges",edges)
-    
-    _, contours, hierarchy= cv2.findContours(edges,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
-    temp = readimg.copy()
-    arcs = readimg.copy()
-    chs = None
-    for i in range(len(contours)):
-        postCountor(contours[i],bound,temp,arcs,total_arcs)
-
-    # cv2.imshow("contours",temp)
-    # cv2.imshow("arcs",arcs)
-    for i in range(len(total_arcs)):
-        for j in range(i):
-            chkarc(total_arcs[i],total_arcs[j],total_circles)
-    
-    circle_counts = [0 for x in range(len(total_circles))]
-    arc_counts = [0 for x in range(len(total_arcs))]
-
-    # print(len(total_circles))
-    if len(total_circles) > 0:
-        for k in range(len(total_circles)):
-            cir = total_circles[k]
-            box = getbox(cir[0],cir[1],cir[2],bound)
-            box1 = getbox(cir[0]*0.7,cir[1],cir[2],bound)
-            for i in range(box[0],box[2]):
-                for j in range(box[1],box[3]):
-                    co = edges[j,i]
-                    if co != 255: continue
-                    disnow = getdist_p2p((i,j),(cir[1],cir[2]))
-                    if np.abs(disnow - cir[0]) < 2:
-                        circle_counts[k] += 1
-
-        idx = circle_counts.index(max(circle_counts))
-        chs = total_circles[idx]
-    #print("arc:",arc_counts)
-    if chs == None and len(total_arcs) > 0:
-        for k in range(len(total_arcs)):
-            arc = total_arcs[k]
-            box = getbox(arc[3],arc[1],arc[2],bound)
-            for i in range(box[0],box[2]):
-                for j in range(box[1],box[3]):
-                    co = edges[j,i]
-                    if co != 255: continue
-                    disnow = getdist_p2p((i,j),(arc[1],arc[2]))
-                    if np.abs(disnow - arc[3]) < 2:
-                        arc_counts[k] += 1
-
-        idx = arc_counts.index(max(arc_counts))
-        arc = total_arcs[idx]
-        chs = (arc[3],arc[1],arc[2])
-
-    if(chs == None):
-        return 0,0,0
-    cv2.circle(img,(int(chs[1]),int(chs[2])),int(chs[0]),(0,255,0),2)
-    box = getbox(chs[0],chs[1],chs[2],bound)
-    cv2.rectangle(img,(box[0],box[1]),(box[2],box[3]),(0,0,255))
-    # cv2.imshow("out",img)
-    return chs
-'''
 
 ###################################################踢球决策
 def kick_act_move():
@@ -1967,6 +1749,7 @@ def kick_act_move():
     global ball_dis_start, hole_angle_start
     global head_state, angle_dis_count, fast_run
     global count
+    global jump_count
     ball_hole_angle_ok = False
 
     # 由脚底到红球延伸出一条射线，依据球洞与该射线的关系，调整机器人位置
@@ -2246,11 +2029,9 @@ def kick_act_move():
             # print("55555 球与球洞都在")
             # print("2310L 调整红球在左脚正前方不远处，看球洞的位置调整")
             if ball_dis_start:  # 390<y<450  230<x<250
-                if Chest_ball_x < 220*(4/3):
-                    # if 240 - Chest_ball_x > 40:
-                    #     print("2314L 需要左侧移 Left02move")
-                    #     action_append("Left02move")
-                    # else:
+                if Chest_ball_x == 0:
+                    jump_count += 1
+                elif Chest_ball_x < 220*(4/3):
                     if Chest_ball_x < 210*(4/3):
                         print("2318L 需要左侧移 Left02move Chest_ball_x={}".format(Chest_ball_x))
                         if real_test:
@@ -2259,6 +2040,7 @@ def kick_act_move():
                         print("2322L 需要左侧移一点 Left1move Chest_ball_x={}".format(Chest_ball_x))
                         if real_test:
                             action_append("Left1move")
+                    jump_count = 0
                     angle_dis_count = 0
                 elif Chest_ball_x > 260*(4/3):
                     # if Chest_ball_x - 240 > 40:
@@ -2274,10 +2056,12 @@ def kick_act_move():
                         if real_test:
                             action_append("Right1move")
                     angle_dis_count = 0
+                    jump_count = 0
                 else:
                     print("2341L Chest_ball_y---位置ok")
                     ball_dis_start = False
                     hole_angle_start = True
+                    jump_count = 0
             if hole_angle_start:
                 if hole_Angle < 0:
                     # angle
@@ -2339,6 +2123,10 @@ def kick_act_move():
 
                     ball_dis_start = True
                     hole_angle_start = False
+
+                if jump_count > 20:
+                    jump_count = 0
+                    step = 9
 
                 if angle_dis_count > 1:
                     angle_dis_count = 0
@@ -2717,6 +2505,7 @@ def kick_ball():
                     # cv2.waitKey(0)
                     Chest_ball_flag = False
                     Chest_ball_y = 0
+                    Chest_ball_x = 0
                 else:
                     print("球位置：{} 面积：{}".format(temp_b_e, temp_b_area))
                     cnt_large3 = cnts2[temp_b_i]
