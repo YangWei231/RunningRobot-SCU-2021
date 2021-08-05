@@ -2915,7 +2915,7 @@ def hole_edge_main(color):
                 elif Ycenter >= 365:
                     if Ycenter > 390:
                         print("3303L 左da侧移 Left1move >440 ",Ycenter)
-                        action_append("Left1move")
+                        action_append("Left3move")
                     else:
                         print("3306L 左侧移 Left02move > 365 ",Ycenter)
                         action_append("Left1move")
@@ -2924,6 +2924,7 @@ def hole_edge_main(color):
                     action_append("Right02move")
                 else:
                     print("3312L 右看 X位置ok")
+                    action_append("Forwalk01")
                     action_append("Forwalk01")
                     action_append("Forwalk01")
                     action_append("Forwalk01")
@@ -2944,38 +2945,7 @@ def hole_edge_main(color):
                  
 
         elif step == 3:
-            if not see:  # not see the edge
-                # cv2.destroyAllWindows()
-                print("3327L 右侧看不到边缘 左侧移 Left3move")
-                action_append("Left1move")
-            else:   # 0
-                if L_R_angle > 2:
-                    if L_R_angle > 7:
-                        print("3332L 左旋转 turn001L ",L_R_angle)
-                        action_append("turn001L")
-                    else:
-                        print("3335L 左旋转 turn000L ",L_R_angle)
-                        action_append("turn000L")
-                    
-                    # time.sleep(1)   # timefftest
-                elif L_R_angle < -2:
-                    if L_R_angle < -7:
-                        print("3341L 右旋转  turn001R ",L_R_angle)
-                        action_append("turn001R")
-                    else:
-                        print("3344L 右旋转  turn000R ",L_R_angle)
-                        action_append("turn000R")
-                    # time.sleep(1)   # timefftest
-                else:
-                    print("666L 右看 X位置ok")
-                    step = 4
-        
-        elif step == 4:
-            print("3352L 右侧看到绿色边缘 右侧移 Right3move")
-            action_append("Right3move")
-            action_append("Right3move")
-            action_append("Right3move")
-            # action_append("Right3move")
+            edge_angle_chest(color)
             action_append("HeadTurnMM")
             step = 5
 
