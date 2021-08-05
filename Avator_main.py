@@ -27,7 +27,7 @@ floor_rec = False
 img_debug = 0
 action_DEBUG = False
 box_debug = False
-stream_pic = False
+stream_pic = True
 robot_IP = "192.168.43.201"
 single_debug = 0
 
@@ -52,19 +52,19 @@ else:
     cap_chest = cv2.VideoCapture(0)
     cap_head = cv2.VideoCapture(2)
 color_range = {
-    'yellow_door': [(20, 140, 60), (40, 240, 150)],
-    'black_door': [(25, 25, 10), (110, 150, 30)],
+    'yellow_door':[(34 , 37 , 126), (48 , 111 , 255)],#yw:起点和终点门上的黄色
+    'black_door': [(50 , 27 , 22), (96 , 156 , 46)],#yw:起点和终点门上的黑色
     'blue_baf':[(93 , 149 , 74), (105 , 252 , 152)],#yw:挡板的蓝色
-    'black_dir':[(45,22,13),(128,135,57)],     #yw:地雷的黑色
+    'black_dir':[(45 , 22 , 13), (128 , 135 , 57)],     #yw:地雷的黑色
     'gray_dir':[(73 , 28 , 70), (88 , 83 , 182)],#yw：地雷关卡地板的灰色
     'green_hole_chest':[(67 , 108 , 68), (76 , 243 , 155)],#yw:过坑的绿色（胸部检测）
     'green_hole_head':[(67 , 140 , 39), (76 , 255 , 104)],#yw:过坑的绿色（头部检测)
-    'blue_floor':[(100 , 185 , 155), (105 , 234 , 229)],#yw:蓝色台阶
-    'green_floor':[(69 , 155 , 86), (75 , 214 , 155)],#yw:绿色台阶
-    'red_floor1':[(0, 153 , 142), (2 , 206 , 221)],#yw:红色台阶   我们取红色台阶需要有两个值
-    'red_floor2':[(177 , 153 , 142), (179 , 206 , 221)],
-    # 'red_XP1':[(0 , 104 , 126), (3 , 177 , 188)],#yw:红色下坡   他这里取了两个掩模做了或运算  不过这两个掩模的值怎么来的我不清楚。
-    # 'red_XP2':[(173 , 98 , 111), (179 , 188 , 193)],
+    'blue_floor':[(100 , 167 , 140), (105 , 234 , 252)],#yw:蓝色台阶
+    'green_floor':[(69 , 127 , 73), (79 , 226 , 158)],#yw:绿色台阶
+    'red_floor1':[(0 , 122 , 120), (3, 206 , 221)],#yw:红色台阶   我们取红色台阶需要有两个值
+    'red_floor2':[(176, 122 , 120), (179 , 206 , 221)],
+    'red_XP1':[(0 , 138 , 92), (3 , 212 , 186)],#yw:红色下坡   他这里取了两个掩模做了或运算  不过这两个掩模的值怎么来的我不清楚。
+    'red_XP2':[(176 , 138 , 92), (179 , 212 , 186)],
     'white_ball_head': [(93 , 13 , 75), (123 , 62 , 181)],  # yw：踢的白球
     'white_ball_chest':[(0 , 0 , 89), (176 , 60 , 255)],
     'd_red_ball_floor1':[(177 , 99 , 129), (179 , 134 , 143)],#yw:这个和下面这个应该是砖
@@ -73,6 +73,9 @@ color_range = {
     'blue_hole_head' : [(112 , 90 , 49), (146 , 209 , 111)],
     'green_bridge':[(69 , 116 , 115), (79 , 212 , 176)],#yw:绿色桥
     'head_blue_door':[(100 , 117 , 70), (109 , 228 , 129)],#wc:蓝色门
+    'green_bridge_rec': [(69 , 116 , 115), (79 , 209 , 176)],
+    'blue_bridge_rec': [(102, 123, 132), (110, 213, 235)],
+    'kick_ball_rec': [(4, 38, 49), (34, 132, 157)],
 }
 
 #################################################################识别
@@ -3224,7 +3227,7 @@ def obstacle():
 
 
          # blue 分析图像 决策执行
-            Bumask = cv2.inRange(hsv,color_range['blue'][0],color_range['blue'][1])
+            Bumask = cv2.inRange(hsv,color_range['blue_baf'][0],color_range['blue_baf'][1])
             Bumask = cv2.erode(Bumask, None, iterations=2)
             Bumask = cv2.dilate(Bumask, np.ones((3, 3), np.uint8), iterations=2)
             # cv2.imshow('Bluemask', Bumask)
@@ -3435,7 +3438,7 @@ def end_door():
         print("/-/-/-/-/-/-/-/-/-进入end_door")
         step = 0
     else:
-        pass
+        return
 
     while state == 1 :
 
