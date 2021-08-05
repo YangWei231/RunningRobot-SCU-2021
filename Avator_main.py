@@ -57,8 +57,8 @@ color_range = {
     'blue_baf':[(93 , 149 , 74), (105 , 252 , 152)],#yw:挡板的蓝色
     'black_dir':[(45 , 22 , 13), (128 , 135 , 57)],     #yw:地雷的黑色
     'gray_dir':[(73 , 28 , 70), (88 , 83 , 182)],#yw：地雷关卡地板的灰色
-    'green_hole_chest':[(67 , 108 , 68), (76 , 243 , 155)],#yw:过坑的绿色（胸部检测）
-    'green_hole_head':[(67 , 140 , 39), (76 , 255 , 104)],#yw:过坑的绿色（头部检测)
+    'green_hole_chest':[(66 , 108 , 53), (76 , 243 , 168)],#yw:过坑的绿色（胸部检测）
+    'green_hole_head':[(66 , 108 , 53), (76 , 243 , 168)],#yw:过坑的绿色（头部检测)
     'blue_floor':[(100 , 167 , 140), (105 , 234 , 252)],#yw:蓝色台阶
     'green_floor':[(69 , 127 , 73), (79 , 226 , 158)],#yw:绿色台阶
     'red_floor1':[(0 , 122 , 120), (3, 206 , 221)],#yw:红色台阶   我们取红色台阶需要有两个值
@@ -71,11 +71,16 @@ color_range = {
     'd_red_ball_floor2':[(75 , 18 , 182), (90 , 36 , 206)],
     'blue_hole_chest': [(111 , 86 , 111), (133 , 198 , 179)],#yw:踢球洞的蓝色圈
     'blue_hole_head' : [(112 , 90 , 49), (146 , 209 , 111)],
+    'blue_hole':        [(112 , 90 , 49), (146 , 209 , 111)],
     'green_bridge':[(69 , 116 , 115), (79 , 212 , 176)],#yw:绿色桥
-    'head_blue_door':[(100 , 117 , 70), (109 , 228 , 129)],#wc:蓝色门
+    'head_blue_door':[(100 , 117 , 64), (109 , 240 , 154)],#wc:蓝色门
     'green_bridge_rec': [(69 , 116 , 115), (79 , 209 , 176)],
     'blue_bridge_rec': [(102, 123, 132), (110, 213, 235)],
     'kick_ball_rec': [(4, 38, 49), (34, 132, 157)],
+    #补充
+    'blue_bridge':[(102 , 123 , 132), (110 , 213 , 235)],
+    'green_bridge_rec':[(59 , 81 , 105), (67 , 153 , 144)],
+    'blue_bridge_rec':[(102 , 123 , 132), (110 , 213 , 235)],
 }
 
 #################################################################识别
@@ -822,7 +827,7 @@ def edge_angle_chest(color):
                     action_append("turn001L")
             elif top_angle < -2:  # 需要右转
                 if top_angle < -6:
-                    print("833L 右大旋转  turn001R < -6 ",Head_L_R_angle)
+                    print("833L 右大旋转  turn001R < -6 ")
                     action_append("turn001R")
                 else:
                     print("836L bottom_angle < -3 需要小右转 turn001R ",bottom_angle)
@@ -1329,9 +1334,9 @@ def door_act_move():
 
     step1_angle_top_L = 3
     step1_angle_top_R = -3
-    step1_head_bottom_x_F = 270
-    step1_head_bottom_x_B = 300
-    step1_delta = 20
+    step1_head_bottom_x_F = 265
+    step1_head_bottom_x_B = 305
+    step1_delta = 30
     step1_close = 375
 
     step2_get_close = 5
@@ -2943,7 +2948,7 @@ def hole_edge(color):
         src = np.rot90(src)
         src = src.copy()
         # cv2.imshow("src1",src)
-        src = src[int(100):int(400),int(50):int(500)]
+        src = src[int(0):int(400),int(50):int(500)]
         src_copy = src
         # cv2.imshow("src2",src)
         src = cv2.GaussianBlur(src, (5, 5), 0)
@@ -2993,7 +2998,7 @@ def hole_edge_main(color):
     print("/-/-/-/-/-/-/-/-/-hole edge")
     while True:
         OrgFrame = HeadOrg_img.copy()
-        x_start = 260
+        x_start = 180
         blobs = OrgFrame[int(0):int(480), int(x_start):int(380)]  # 只对中间部分识别处理  Y , X
         handling = blobs.copy()
         frame_mask = blobs.copy()
@@ -3120,20 +3125,28 @@ def hole_edge_main(color):
                     # time.sleep(1)   # timefftest
                 elif Ycenter >= 365:
                     if Ycenter > 390:
-                        print("3303L 左da侧移 Left3move >440 ",Ycenter)
-                        action_append("Left3move")
+                        print("3303L 左da侧移 Left1move >440 ",Ycenter)
+                        action_append("Left1move")
                     else:
                         print("3306L 左侧移 Left02move > 365 ",Ycenter)
-                        action_append("Left02move")
+                        action_append("Left1move")
                 elif Ycenter < 355:
                     print("3309L 右侧移 Right02move <400 ",Ycenter)
                     action_append("Right02move")
                 else:
                     print("3312L 右看 X位置ok")
-                    action_append("fastForward03")
+                    action_append("Forwalk01")
+                    action_append("Forwalk01")
+                    action_append("Forwalk01")
+                    action_append("Forwalk01")
+                    action_append("Forwalk01")
+                    action_append("Forwalk01")
+                    action_append("Forwalk01")
+                    action_append("Forwalk01")
+                    action_append("Forwalk01")
                     # action_append("Left02move")
-                    print("向前一步")
-                    action_append("forwardSlow0403")
+                    #print("向前一步")
+                    # action_append("forwardSlow0403")
                     # action_append("forwardSlow0403")  
                     # action_append("forwardSlow0403")
                     action_append("Stand")
@@ -3145,7 +3158,7 @@ def hole_edge_main(color):
             if not see:  # not see the edge
                 # cv2.destroyAllWindows()
                 print("3327L 右侧看不到边缘 左侧移 Left3move")
-                step == 5
+                action_append("Left1move")
             else:   # 0
                 if L_R_angle > 2:
                     if L_R_angle > 7:
@@ -3179,6 +3192,7 @@ def hole_edge_main(color):
 
         elif step == 5:
             print("过坑阶段结束")
+            action_append("Stand")
             break
 
 
@@ -3208,8 +3222,9 @@ Bbox_centerY = 0
 def obstacle():
     global HeadOrg_img, step
     global Head_L_R_angle,Bbox_centerY,blue_rail
-    
+    global baffle_angle
     print("/-/-/-/-/-/-/-/-/-进入obscle")
+    action_append("Stand")
     step = 1
     k = 1
     blue_rail = False
@@ -4142,7 +4157,7 @@ def start_door():
                     # action_append("forwardSlow0403")
 
                     print("3899L 执行快走555")
-                    action_append("fastForward05")
+                    action_append("fastForward03")
                     action_append("Stand")
                     step = 1
 
