@@ -3224,7 +3224,7 @@ def obstacle():
 
 
          # blue 分析图像 决策执行
-            Bumask = cv2.inRange(hsv,color_dist['blue'][0],color_dist['blue'][1])
+            Bumask = cv2.inRange(hsv,color_range['blue'][0],color_range['blue'][1])
             Bumask = cv2.erode(Bumask, None, iterations=2)
             Bumask = cv2.dilate(Bumask, np.ones((3, 3), np.uint8), iterations=2)
             # cv2.imshow('Bluemask', Bumask)
@@ -3435,7 +3435,7 @@ def end_door():
         print("/-/-/-/-/-/-/-/-/-进入end_door")
         step = 0
     else:
-        return
+        pass
 
     while state == 1 :
 
