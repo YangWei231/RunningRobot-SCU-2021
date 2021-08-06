@@ -1786,7 +1786,7 @@ def kick_act_move():
                         # action_append("forwardSlow0403")
                         if real_test:
                             action_append("Forwalk01")
-                            action_append("turn001R")
+                            # action_append("turn001R")
                             time.sleep(sleep_time_l)
                             # head_angle_dis()  # headfftest
                     elif Chest_ball_y <= 400:  # 340
@@ -1827,17 +1827,18 @@ def kick_act_move():
                                 action_append("Right3move")
                         else:
                             if Chest_ball_y < 370:
-                                print("2045L step = 0 再靠球近些（ball_y < 370）前挪一点 forwalkVeryslow Chest_ball_y={}".format(
+                                print("2045L step = 0 再靠球近些（ball_y < 370）前挪一点 Forwalk01 Chest_ball_y={}".format(
                                     Chest_ball_y))
                                 if real_test:
                                     # action_append("Forwalk01") #zzx 10.14
-                                    action_append("forwalkVeryslow")
-                                    action_append("turn001R")
+                                    action_append("Forwalk01")
+                                    action_append("Stand")
+                                    # action_append("turn001R")
                                 # action_append("Forwalk02")
                             else:
                                 print("2052L step = 0 再靠球近些（ball_y < 360）前挪一点点  Chest_ball_y={}".format(Chest_ball_y))
                                 if real_test:
-                                    action_append("forwalkVeryslow")
+                                    action_append("Forwalk01")
                                     action_append("Stand")
 
                     elif Chest_ball_y > 430:  # 470改成了430 zzx 10.14
@@ -1854,7 +1855,7 @@ def kick_act_move():
                 count += 1
                 if real_test:
                     if count > 5:
-                        action_append("turn001R")  # ffetst
+                        action_append("turn005R")  # ffetst
                         action_append("Stand")
                     # elif count < 1:
                     #     action_append("Forwalk01")
@@ -1863,14 +1864,6 @@ def kick_act_move():
                         action_append("forwalkVeryslow")
                         action_append("turn001R")
 
-                # if head_state == 0:
-                #     print("头右转(-60)寻找球")
-                #     head_state = -60
-                # elif head_state == -60:
-                #     print("头由右转变为左转(+60)寻找球")
-                #     head_state = 60
-                # elif head_state == 60:
-                #     print("头部 恢复0 向前迈进")
 
         elif step == 1:  # 看球调整位置   逐步前进调整至看球洞
             if Chest_ball_flag is False:
@@ -1891,12 +1884,12 @@ def kick_act_move():
                 if hole_flag == True:
                     if head_state == -60:
                         print("头右看，看到球洞")
-                        step = 2
+                        step = 0
                         # print("172L 头恢复0 向右平移")
                         # head_state = 0
                     elif head_state == 60:
                         print("头左看，看到球洞")
-                        step = 3
+                        step = 0
                         # print("172L 头恢复0 向左平移")
                         # head_state = 0
                     elif head_state == 0:  # 头前看 看到球洞
@@ -1915,20 +1908,24 @@ def kick_act_move():
                         print("2199L4 step = 4 需要左侧移 Left3move Chest_ball_x={}".format(Chest_ball_x))
                         if real_test:
                             action_append("Left3move")
+                            time.sleep(0.3)
                     else:
                         print("2203L4 step = 4 需要左侧移 Left02move Chest_ball_x={}".format(Chest_ball_x))
                         if real_test:
                             action_append("Left02move")
+                            time.sleep(0.3)
                     angle_dis_count = 0
                 elif Chest_ball_x > 280*(4/3):
                     if Chest_ball_x > 280*(4/3):
                         print("2209L4 step = 4 需要右侧移 Right3move Chest_ball_x={}".format(Chest_ball_x))
                         if real_test:
                             action_append("Right3move")
+                            time.sleep(0.3)
                     else:
                         print("2213L4 step = 4 需要右侧移 Right02move Chest_ball_x={}".format(Chest_ball_x))
                         if real_test:
                             action_append("Right02move")
+                            time.sleep(0.3)
                     angle_dis_count = 0
                 else:
                     print("2218L4 Chest_ball_y---位置ok")
@@ -1949,11 +1946,13 @@ def kick_act_move():
                                 print("2232L4 需要前挪一点 forwalkVeryslow Chest_ball_y={}".format(Chest_ball_y))
                                 if real_test:
                                     action_append("forwalkVeryslow")
+                                    time.sleep(0.3)
                                 angle_dis_count = 0
 
                             print("2237L4 大左转一下  turn003L hole_Angle={}".format(hole_Angle))
                             if real_test:
                                 action_append("turn003L")
+                                time.sleep(0.3)
                         else:
                             if Chest_ball_y > 470:
                                 print("2242L4 需要后挪一点 Back3Run Chest_ball_y".format(Chest_ball_y))
@@ -1965,11 +1964,13 @@ def kick_act_move():
                                 print("2247L4 需要前挪一点 forwalkVeryslow Chest_ball_y={}".format(Chest_ball_y))
                                 if real_test:
                                     action_append("forwalkVeryslow")
+                                    time.sleep(0.3)
                                 angle_dis_count = 0
 
                             print("2252L4 左转一下  turn001L hole_Angle={}".format(hole_Angle))
                             if real_test:
                                 action_append("turn001L")
+                                time.sleep(0.3)
                     else:
                         print("2256L4 hole_Angle---角度ok")
                         angle_dis_count = angle_dis_count + 1
@@ -1992,10 +1993,12 @@ def kick_act_move():
                                 print("2273L4 需要前挪一点 forwalkVeryslow Chest_ball_y={}".format(Chest_ball_y))
                                 if real_test:
                                     action_append("forwalkVeryslow")
+                                    time.sleep(0.3)
                                 angle_dis_count = 0
 
                             print("2278L4 大右转一下 turn001R hole_Angle={}".format(hole_Angle))
                             action_append("turn001R")  # turn003R 改成了 turn001R zzx 10.14
+                            time.sleep(0.3)
                         else:
                             if Chest_ball_y > 500:
                                 print("2282L4 需要后挪一点 Back3Run Chest_ball_y={}".format(Chest_ball_y))
@@ -2006,10 +2009,12 @@ def kick_act_move():
                                 print("2286L4 需要前挪一点 forwalkVeryslow Chest_ball_y={}".format(Chest_ball_y))
                                 if real_test:
                                     action_append("forwalkVeryslow")
+                                    time.sleep(0.3)
                                 angle_dis_count = 0
 
                             print("2291L4 右转一下 turn001R ", hole_Angle)
                             action_append("turn001R")
+                            time.sleep(0.3)
                     else:
                         print("2294L4 hole_Angle---角度OK")
                         angle_dis_count = angle_dis_count + 1
@@ -2036,10 +2041,12 @@ def kick_act_move():
                         print("2318L 需要左侧移 Left02move Chest_ball_x={}".format(Chest_ball_x))
                         if real_test:
                             action_append("Left02move")
+                            time.sleep(0.3)
                     else:
                         print("2322L 需要左侧移一点 Left1move Chest_ball_x={}".format(Chest_ball_x))
                         if real_test:
                             action_append("Left1move")
+                            time.sleep(0.3)
                     jump_count = 0
                     angle_dis_count = 0
                 elif Chest_ball_x > 260*(4/3):
@@ -2051,10 +2058,12 @@ def kick_act_move():
                         print("2332L 需要右侧移 Right02move Chest_ball_x={}".format(Chest_ball_x))
                         if real_test:
                             action_append("Right02move")
+                            time.sleep(0.3)
                     else:
                         print("2336L 需要右侧移一点 Right1move Chest_ball_x={}".format(Chest_ball_x))
                         if real_test:
                             action_append("Right1move")
+                            time.sleep(0.3)
                     angle_dis_count = 0
                     jump_count = 0
                 else:
@@ -2083,10 +2092,12 @@ def kick_act_move():
                             print("2361L 大左转一下  turn001L hole_Angle={}".format(hole_Angle))
                             if real_test:
                                 action_append("turn001L")
+                                time.sleep(0.3)
                         else:
                             print("2365L 左转一下  turn001L ", hole_Angle)
                             if real_test:
                                 action_append("turn001L")
+                                time.sleep(0.3)
                     else:
                         print("2369L hole_Angle---角度ok")
                         angle_dis_count = angle_dis_count + 1
@@ -2113,10 +2124,12 @@ def kick_act_move():
                             print("2390L 大右转一下 turn001R hole_Angle={}".format(hole_Angle))
                             if real_test:
                                 action_append("turn001R")
+                                time.sleep(0.3)
                         else:
                             print("2394L 右转一下 turn001R hole_Angle={}".format(hole_Angle))
                             if real_test:
                                 action_append("turn001R")
+                                time.sleep(0.3)
                     else:
                         print("2398L hole_Angle---角度OK")
                         angle_dis_count = angle_dis_count + 1
@@ -2126,7 +2139,7 @@ def kick_act_move():
 
                 if jump_count > 20:
                     jump_count = 0
-                    step = 9
+                    step = 8
 
                 if angle_dis_count > 1:
                     angle_dis_count = 0
@@ -2144,25 +2157,39 @@ def kick_act_move():
             if Chest_ball_angle > 75 and hole_Angle < -75:
                 ball_hole_angle_ok = True
 
-            if Chest_ball_angle > 73 and hole_Angle > 73 and ball_hole_angle_ok == False:
+            if jump_count > 20:
+                step = 8
+
+            if Chest_ball_x == 0 and Chest_ball_y == 0:
+                jump_count += 1
+            elif Chest_ball_angle > 73 and hole_Angle > 73 and ball_hole_angle_ok == False:
+                jump_count = 0
                 print("2421L 右转一点点 turn001R")
                 if real_test:
                     action_append("turn001R")
+                    time.sleep(0.3)
             elif Chest_ball_angle < -73 and hole_Angle < -73 and ball_hole_angle_ok == False:
+                jump_count = 0
                 print("2425L 左转一点点 turn001L")
                 if real_test:
                     action_append("turn001L")
+                    time.sleep(0.3)
             elif Chest_ball_y <= 460:
+                jump_count = 0
                 print("2429L 向前挪动一点点 forwalkVeryslow")
                 if real_test:
                     action_append("forwalkVeryslow")
+                    time.sleep(0.3)
                     # action_append("turn001R")
 
             elif hole_x > 250*(4/3):
+                jump_count = 0
                 print("step = 6  方向偏左了, 往右转 turn001R hole_x={}".format(hole_x))
                 if real_test:
                     action_append("turn001R")
+                    time.sleep(0.3)
             else:
+                jump_count = 0
                 print("/////////////////////////////next step 进入最后对准阶段 step=7")
                 step = 7
 
@@ -2290,7 +2317,7 @@ def kick_act_move():
             print("完成！ 77777")
             state = -1
             step = 10
- 
+
 
 def kick_ball():
     global state, state_sel, step, reset, skip
@@ -2300,6 +2327,7 @@ def kick_ball():
     global hole_flag, Chest_ball_flag
     global ChestOrg_img
     global picnum, img_debug
+    global jump_count
 
     # 初始化
     sum_contours = np.array([[[0, 0]], [[0, 1]], [[1, 1]], [[1, 0]]])
