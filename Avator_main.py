@@ -2765,7 +2765,7 @@ def hole_edge(color):
         src = np.rot90(src)
         src = src.copy()
         # cv2.imshow("src1",src)
-        src = src[int(0):int(400),int(50):int(500)]
+        src = src[int(40):int(480),int(50):int(500)]
         src_copy = src
         # cv2.imshow("src2",src)
         src = cv2.GaussianBlur(src, (5, 5), 0)
@@ -2817,6 +2817,8 @@ def hole_edge_main(color):
         OrgFrame = HeadOrg_img.copy()
         x_start = 180
         blobs = OrgFrame[int(0):int(480), int(x_start):int(380)]  # 只对中间部分识别处理  Y , X
+        r_h=480
+        r_w=200
         handling = blobs.copy()
         frame_mask = blobs.copy()
 
@@ -2831,75 +2833,69 @@ def hole_edge_main(color):
         Imask = cv2.dilate(Imask, np.ones((3, 3), np.uint8), iterations=3)
         kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (15, 15))
         Imask = cv2.morphologyEx(Imask, cv2.MORPH_OPEN, kernel)
-        _, contours, hierarchy = cv2.findContours(Imask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_L1)  # 找出所有轮廓
-        # cv2.imshow("opened",Imask)
-        # print("len:",len(cnts))
+        _, cnts, hierarchy = cv2.findContours(Imask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_TC89_L1)  # 找出所有轮廓
+        
+        cnt_sum, area_max = getAreaMaxContour1(cnts)  # 找出最大轮廓
+        C_percent = round(area_max * 100 / (r_w * r_h), 2)  # 最大轮廓百分比
+        # cv2.drawContours(frame, cnt_sum, -1, (255, 0, 255), 3)
 
-        if len(contours) > 0: 
-            max_area = max(contours, key=cv2.contourArea)
-            epsilon = 0.05 * cv2.arcLength(max_area, True)
-            approx = cv2.approxPolyDP(max_area, epsilon, True)
-            approx_list = list(approx)
-            approx_after = []
-            for i in range(len(approx_list)):
-                approx_after.append(approx_list[i][0])
-            approx_sort = sorted(approx_after, key=lambda x: x[1], reverse=True)
-            # if approx_sort[0][0] > approx_sort[1][0]:
-            #     approx_sort[0], approx_sort[1] = approx_sort[1], approx_sort[0]
-            if len(approx_sort) == 4:
-                bottom_line = (approx_sort[3], approx_sort[2])
-                center_x = (bottom_line[1][0]+bottom_line[0][0])/2
-                center_y = (bottom_line[1][1]+bottom_line[0][1])/2
-            else:
-                bottom_line = None
-
-        else:
-            bottom_line = None
-            
-        # 初始化
-        L_R_angle = 0 
-        blackLine_L = [0,0]
-        blackLine_R = [0,0]
-
-        if bottom_line is not None:
+        if cnt_sum is not None:
             see = True
-            if bottom_line[0][1] - bottom_line[1][1]==0:
-                angle=90
-            else:
-                angle = - math.atan((bottom_line[1][1] - bottom_line[0][1]) / (bottom_line[1][0] - bottom_line[0][0]))*180.0/math.pi
-            Ycenter = int((bottom_line[1][1] + bottom_line[0][1]) / 2)
-            Xcenter = int((bottom_line[1][0] + bottom_line[0][0]) / 2)
-            if bottom_line[1][1] > bottom_line[0][1]:
-                blackLine_L = [bottom_line[1][0] , bottom_line[1][1]]
-                blackLine_R = [bottom_line[0][0] , bottom_line[0][1]]
-            else:
-                blackLine_L =  [bottom_line[0][0] , bottom_line[0][1]]
-                blackLine_R = [bottom_line[1][0] , bottom_line[1][1]]
-            cv2.circle(OrgFrame, (Xcenter + x_start, Ycenter), 10, (255,255,0), -1)#画出中心点
+            rect = cv2.minAreaRect(cnt_sum)#最小外接矩形
+            box = np.int0(cv2.boxPoints(rect))#最小外接矩形的四个顶点
+            
+            bottom_right = cnt_sum[0][0]  # 右下角点坐标
+            bottom_left = cnt_sum[0][0]  # 左下角点坐标
+            top_right = cnt_sum[0][0]  # 右上角点坐标
+            top_left = cnt_sum[0][0]  # 左上角点坐标
+            for c in cnt_sum:
 
-            if blackLine_L[0] == blackLine_R[0]:
-                L_R_angle = 0
-            else:
-                L_R_angle =  (-math.atan( (blackLine_L[1]-blackLine_R[1]) / (blackLine_L[0]-blackLine_R[0]) ) *180.0/math.pi)+4
+                if c[0][0] + 1 * (r_h - c[0][1]) < bottom_left[0] + 1 * (r_h - bottom_left[1]):
+                    bottom_left = c[0]
+                if c[0][0] + 1 * c[0][1] > bottom_right[0] + 1 * bottom_right[1]:
+                    bottom_right = c[0]
+
+                if c[0][0] + 3 * c[0][1] < top_left[0] + 3 * top_left[1]:
+                    top_left = c[0]
+                if (r_w - c[0][0]) + 3 * c[0][1] < (r_w - top_right[0]) + 3 * top_right[1]:
+                    top_right = c[0]
+
+                # if debug:
+                #     handling = ChestOrg_img.copy()
+                #     cv2.circle(handling, (c[0][0], c[0][1]), 5, [0, 255, 0], 2)
+                #     cv2.circle(handling, (bottom_left[0], bottom_left[1]), 5, [255, 255, 0], 2)
+                #     cv2.circle(handling, (bottom_right[0], bottom_right[1]), 5, [255, 0, 255], 2)
+                #     cv2.imshow('handling', handling)  # 显示图像
+                #     cv2.waitKey(2)
+
+            bottomcenter_x = (bottom_left[0] + bottom_right[0]) / 2  # 得到bottom中心坐标
+            bottomcenter_y = (bottom_left[1] + bottom_right[1]) / 2
+
+            topcenter_x = (top_right[0] + top_left[0]) / 2  # 得到top中心坐标
+            topcenter_y = (top_left[1] + top_right[1]) / 2
+            bottom_angle =  -math.atan( (bottom_right[1]-bottom_left[1]) / (bottom_right[0]-bottom_left[0]) ) *180.0/math.pi
+            top_angle =  -math.atan( (top_right[1]-top_left[1]) / (top_right[0]-top_left[0]) ) *180.0/math.pi+3
 
 
 
-            if img_debug:
+
+
+            # if img_debug:
                 
-                cv2.circle(OrgFrame, (blackLine_L[0] + x_start, blackLine_L[1]), 5, [0, 255, 255], 2)
-                cv2.circle(OrgFrame, (blackLine_R[0] + x_start, blackLine_R[1]), 5, [255, 0, 255], 2)
-                cv2.line(OrgFrame, (blackLine_R[0] + x_start,blackLine_R[1]), (blackLine_L[0] + x_start,blackLine_L[1]), (0, 255, 255), thickness=2)
-                cv2.putText(OrgFrame, "L_R_angle:" + str(L_R_angle),(10, OrgFrame.shape[0] - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
-                cv2.putText(OrgFrame, "Xcenter:" + str(Xcenter + x_start),(10, OrgFrame.shape[0] - 50), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
-                cv2.putText(OrgFrame, "Ycenter:" + str(Ycenter),(200, OrgFrame.shape[0] - 50), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
+        #         cv2.circle(OrgFrame, (blackLine_L[0] + x_start, blackLine_L[1]), 5, [0, 255, 255], 2)
+        #         cv2.circle(OrgFrame, (blackLine_R[0] + x_start, blackLine_R[1]), 5, [255, 0, 255], 2)
+        #         cv2.line(OrgFrame, (blackLine_R[0] + x_start,blackLine_R[1]), (blackLine_L[0] + x_start,blackLine_L[1]), (0, 255, 255), thickness=2)
+        #         cv2.putText(OrgFrame, "L_R_angle:" + str(L_R_angle),(10, OrgFrame.shape[0] - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
+        #         cv2.putText(OrgFrame, "Xcenter:" + str(Xcenter + x_start),(10, OrgFrame.shape[0] - 50), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
+        #         cv2.putText(OrgFrame, "Ycenter:" + str(Ycenter),(200, OrgFrame.shape[0] - 50), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 0, 255), 2)
 
-                # cv2.drawContours(frame_mask, cnt_sum, -1, (255, 0, 255), 3)
-                cv2.imshow('frame_mask', frame_mask)
-                # cv2.imshow('black', Imask)
-                cv2.imshow('OrgFrame', OrgFrame)
-                cv2.waitKey(10)
-        else:
-            see = False
+        #         # cv2.drawContours(frame_mask, cnt_sum, -1, (255, 0, 255), 3)
+        #         cv2.imshow('frame_mask', frame_mask)
+        #         # cv2.imshow('black', Imask)
+        #         cv2.imshow('OrgFrame', OrgFrame)
+        #         cv2.waitKey(10)
+        # else:
+        #     see = False
             
         #print(Ycenter)
 
@@ -2910,56 +2906,45 @@ def hole_edge_main(color):
             time.sleep(1)   # timefftest
             step = 2
         elif step == 2:
-            if not see:  # not see the edge
-                # cv2.destroyAllWindows()
-                print("3273L 右侧看不到边缘 左侧移 Left3move")
-                action_append("Left3move")
-            else:   # 0
-                if L_R_angle > 1.5:
-                    if L_R_angle > 7:
+      
+                if top_angle > 1.5:
+                    if top_angle > 7:
                         headTURN += 1
-                        print("3279L 左da旋转 turn001L ",L_R_angle)
+                        print("3279L 左da旋转 turn001L ",top_angle)
                         action_append("turn001L")
 
                     else:
-                        print("3283L 左旋转 turn000L ",L_R_angle)
+                        print("3283L 左旋转 turn000L ",top_angle)
                         headTURN += 1
                         action_append("turn000L")
 
                     
                     # time.sleep(1)   # timefftest
-                elif L_R_angle < -1.5:
-                    if L_R_angle < -7:
+                elif top_angle < -1.5:
+                    if top_angle < -7:
                         headTURN += 1
-                        print("3292L 右da旋转  turn001R ",L_R_angle)
+                        print("3292L 右da旋转  turn001R ",top_angle)
                         action_append("turn001R")
 
                     else:
-                        print("3296L 右旋转  turn000R ",L_R_angle)
+                        print("3296L 右旋转  turn000R ",top_angle)
                         action_append("turn000R")
 
                     
                     # time.sleep(1)   # timefftest
-                elif Ycenter >= 365:
-                    if Ycenter > 390:
-                        print("3303L 左da侧移 Left1move >440 ",Ycenter)
+                elif topcenter_y >= 369:
+                    if topcenter_y > 399:
+                        print("3303L 左da侧移 Left1move >440 ",topcenter_y)
                         action_append("Left3move")
                     else:
-                        print("3306L 左侧移 Left02move > 365 ",Ycenter)
-                        action_append("Left1move")
-                elif Ycenter < 355:
-                    print("3309L 右侧移 Right02move <400 ",Ycenter)
+                        print("3306L 左侧移 Left02move > 365 ",topcenter_y)
+                        action_append("Left02move")
+                elif topcenter_y < 360:
+                    print("3309L 右侧移 Right02move <400 ",topcenter_y)
                     action_append("Right02move")
                 else:
                     print("3312L 右看 X位置ok")
-                    action_append("Forwalk01")
-                    action_append("Forwalk01")
-                    action_append("Forwalk01")
-                    action_append("Forwalk01")
-                    action_append("Forwalk01")
-                    action_append("Forwalk01")
-                    action_append("Forwalk01")
-                    action_append("Forwalk01")
+                    action_append("fastForward03")
                     action_append("Forwalk01")
                     action_append("Forwalk01")
                     # action_append("Left02move")
@@ -2972,8 +2957,14 @@ def hole_edge_main(color):
                     #cv2.destroyAllWindows()
                  
 
+
+        
         elif step == 3:
-            edge_angle_chest(color)
+            print("3352L 右侧看到绿色边缘 右侧移 Right3move")
+            action_append("Right3move")
+            action_append("Right3move")
+            action_append("Right3move")
+            # action_append("Right3move")
             action_append("HeadTurnMM")
             step = 5
 
