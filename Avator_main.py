@@ -216,7 +216,7 @@ def hole_recognize_2():
         return False
 
 #地雷识别
-def obstacle_recognize():
+def tacle_recognize():
     color = 'black_dir'
     src = ChestOrg_img.copy()
     src = src[int(180):int(400),int(100):int(400)]
@@ -2978,6 +2978,16 @@ def angle_adjust():#调整角度，确保始终朝前
          pass
         
 Bbox_centerY = 0
+
+def area_bits(Imask):
+    area=0
+    for i in Imask:
+        for j in i:
+            if j!=0:
+                area=area+1
+            else:
+                continue
+    return area
 def obstacle():
     global HeadOrg_img, step
     global Head_L_R_angle,Bbox_centerY,blue_rail
@@ -2987,7 +2997,9 @@ def obstacle():
     step = 1
     k = 1
     blue_rail = False
-
+    fall_right=False
+    fall_left =False
+    
     while(1):
         if True:    
             if ChestOrg_img is None:
@@ -3006,6 +3018,20 @@ def obstacle():
             Bumask = cv2.dilate(Bumask, np.ones((3, 3), np.uint8), iterations=2)
             # cv2.imshow('Bluemask', Bumask)
             _, cntsblue, hierarchy = cv2.findContours(Bumask, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)  # 找出轮廓
+            #添加是否到板子边缘的决策，纠正绕行动作
+            Imask_whiteboard=cv2.inRange(hsv,color_range['gray_dir'][0],color_range['gray_dir'][1])
+            detect_right=[540,600,320,480]#从左到右是Y1,Y2,X1,X2
+            detect_left =[540,600,320,480]
+            single_right=Imask_whiteboard[int(detect_right)[0],int(detect_right)[1],int(detect_right)[2],int(detect_right)[3]]
+            single_left=Imask_whiteboard[int(detect_left)[0], int(detect_left)[1], int(detect_left)[2], int(detect_left)[3]]
+            area_right_detect=area_bits(single_right)
+            area_left_detect =area_bits(single_left)
+            if area_right_detect<0.5*(detect_right[1]-detect_right[0])*(detect_right[3]-detect_right[2]):
+                print("检测到右边是空的，是不是要摔了？")
+                fall_right = True
+            if area_left_detect <0.5*(detect_left[1]-detect_left[0])*(detect_left[3]-detect_left[2]):
+                print("检测到左边是空的，是不是要摔了？")
+                fall_left  = True
             
             if cntsblue is not None:
                 cnt_large = getAreaMaxContour2(cntsblue)    # 取最大轮廓
@@ -3137,38 +3163,67 @@ def obstacle():
 
               
              
-                 
-                elif (50<= Big_battle[0] and Big_battle[0] < 140):
-                    print("3580L 右平移一步 Right02move",Big_battle[0])
+                
+                elif (50 <= Big_battle[0] and Big_battle[0] < 140):
+                    print("3580L 右平移一步 Right02move", Big_battle[0])
+                    if fall_right==True:
+                        print("但是右侧好像要摔了，还是往左走吧")
+                        action_append("Left3move")
+                        action_append('Left3move')
+                        continue
                     action_append("Stand")
                     action_append("Right02move")
-                    
-                
-                    #240修改为265
-                elif (140<= Big_battle[0] and Big_battle[0]< 240):
-                    print("3586L 右平移三步 Right3move",Big_battle[0])
+
+                    # 240修改为265
+                elif (140 <= Big_battle[0] and Big_battle[0] < 240):
+                    print("3586L 右平移三步 Right3move", Big_battle[0])
+                    if fall_right==True:
+                        print("但是右侧好像要摔了，还是往左走吧")
+                        action_append("Stand")
+                        action_append("Right3move")
+                        action_append("Stand")
+                        action_append("Right3move")
+                        action_append("Stand")
+                        action_append("Right02move")
+                        continue
                     action_append("Stand")
                     action_append("Right3move")
                     action_append("Stand")
                     action_append("Right02move")
                     action_append("Stand")
                     action_append("Right02move")
-                    
-                    
 
-                elif (240<= Big_battle[0] and Big_battle[0]< 360):
-                    print("3592L 向左平移三步 Left3move",Big_battle[0])
-                    action_append("Stand")
-                    action_append("Left3move")
-                    action_append("Stand")
-                    action_append("Left3move")
-                    action_append("Stand")
-                    action_append("Left3move")
-                   
-                    
 
-                elif (360<= Big_battle[0] < 430):
-                    print("3598L 向左平移一步 Left02move",Big_battle[0])
+
+                elif (240 <= Big_battle[0] and Big_battle[0] < 360):
+                    print("3592L 向左平移三步 Left3move", Big_battle[0])
+                    if fall_left==True:
+                        print("但是左侧好像要摔了，还是往右走吧")
+                        action_append("Stand")
+                        action_append("Left3move")
+                        action_append("Stand")
+                        action_append("Left3move")
+                        action_append("Stand")
+                        action_append("Left3move")
+                        action_append("Stand")
+                        action_append("Left02move")
+                        continue
+                    action_append("Stand")
+                    action_append("Left3move")
+                    action_append("Stand")
+                    action_append("Left3move")
+                    action_append("Stand")
+                    action_append("Left3move")
+
+
+
+                elif (360 <= Big_battle[0] < 430):
+                    print("3598L 向左平移一步 Left02move", Big_battle[0])
+                    if fall_left==True:
+                        print("但是左侧好像要摔了，还是往右走吧")
+                        action_append("Left3move")
+                        action_append('Left3move')
+                        continue
                     action_append("Stand")
                     action_append("Left02move")
                     
