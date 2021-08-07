@@ -55,7 +55,7 @@ color_range = {
     'black_door': [(50 , 27 , 22), (96 , 156 , 46)],#yw:起点和终点门上的黑色
     'blue_baf':[(93 , 149 , 74), (105 , 252 , 152)],#yw:挡板的蓝色
     'black_dir':[(45 , 22 , 13), (128 , 135 , 57)],     #yw:地雷的黑色
-    'gray_dir':[(73 , 28 , 70), (88 , 83 , 182)],#yw：地雷关卡地板的灰色
+    'gray_dir':[(73 , 28 , 70), (91 , 100 , 194)],#yw：地雷关卡地板的灰色
     'green_hole_chest':[(66 , 108 , 53), (76 , 243 , 168)],#yw:过坑的绿色（胸部检测）
     'green_hole_head':[(66 , 108 , 53), (76 , 243 , 168)],#yw:过坑的绿色（头部检测)
     'blue_floor':[(100 , 167 , 140), (105 , 234 , 252)],#yw:蓝色台阶
@@ -3042,10 +3042,10 @@ def obstacle():
             _, cntsblue, hierarchy = cv2.findContours(Bumask, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)  # 找出轮廓
             #添加是否到板子边缘的决策，纠正绕行动作
             Imask_whiteboard=cv2.inRange(hsv,color_range['gray_dir'][0],color_range['gray_dir'][1])
-            detect_right=[540,600,320,480]#从左到右是Y1,Y2,X1,X2
-            detect_left =[540,600,320,480]
-            single_right=Imask_whiteboard[int(detect_right)[0],int(detect_right)[1],int(detect_right)[2],int(detect_right)[3]]
-            single_left=Imask_whiteboard[int(detect_left)[0], int(detect_left)[1], int(detect_left)[2], int(detect_left)[3]]
+            detect_right=[500,560,360,430]#从左到右是Y1,Y2,X1,X2
+            detect_left =[500,560,50 ,120]
+            single_right=Imask_whiteboard[detect_right[0]:detect_right[1],detect_right[2]:detect_right[3]]
+            single_left=Imask_whiteboard[detect_left[0]:detect_left[1], detect_left[2]:detect_left[3]]
             area_right_detect=area_bits(single_right)
             area_left_detect =area_bits(single_left)
             if area_right_detect<0.5*(detect_right[1]-detect_right[0])*(detect_right[3]-detect_right[2]):
@@ -3202,11 +3202,11 @@ def obstacle():
                     if fall_right==True:
                         print("但是右侧好像要摔了，还是往左走吧")
                         action_append("Stand")
-                        action_append("Right3move")
+                        action_append("Left3move")
                         action_append("Stand")
-                        action_append("Right3move")
+                        action_append("Left3move")
                         action_append("Stand")
-                        action_append("Right02move")
+                        action_append("Left02move")
                         continue
                     action_append("Stand")
                     action_append("Right3move")
@@ -3222,13 +3222,13 @@ def obstacle():
                     if fall_left==True:
                         print("但是左侧好像要摔了，还是往右走吧")
                         action_append("Stand")
-                        action_append("Left3move")
+                        action_append("Right3move")
                         action_append("Stand")
-                        action_append("Left3move")
+                        action_append("Right3move")
                         action_append("Stand")
-                        action_append("Left3move")
+                        action_append("Right3move")
                         action_append("Stand")
-                        action_append("Left02move")
+                        action_append("Right3move")
                         continue
                     action_append("Stand")
                     action_append("Left3move")
@@ -3243,8 +3243,8 @@ def obstacle():
                     print("3598L 向左平移一步 Left02move", Big_battle[0])
                     if fall_left==True:
                         print("但是左侧好像要摔了，还是往右走吧")
-                        action_append("Left3move")
-                        action_append('Left3move')
+                        action_append("Right3move")
+                        action_append('Right3move')
                         continue
                     action_append("Stand")
                     action_append("Left02move")
