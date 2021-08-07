@@ -2759,13 +2759,14 @@ def baffle():
 ###################### 过            坑-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-
 def hole_edge(color):
     edge_angle_chest(color)#调整好角度与距离
+    step=1
     while(1):
         Area = 0
         src = ChestOrg_img.copy()
         src = np.rot90(src)
         src = src.copy()
         # cv2.imshow("src1",src)
-        src = src[int(40):int(480),int(50):int(500)]
+        src = src[int(40):int(400),int(50):int(500)]
         src_copy = src
         # cv2.imshow("src2",src)
         src = cv2.GaussianBlur(src, (5, 5), 0)
@@ -2784,19 +2785,23 @@ def hole_edge(color):
         # cv2.waitKey()
 
         _, contours2, hierarchy2 = cv2.findContours(mask1, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
-        if len(contours2) >= 2:
-            print("3146L 仍然看得到内轮廓，向前走 forwardSlow0403")
-            action_append("forwardSlow0403")
+        if step==1 :
+            if len(contours2) >= 2:
+                print("3146L 仍然看得到内轮廓，向前走 forwardSlow0403")
+                action_append("forwardSlow0403")
+                step=1
 
-        else:
-            print("已近迈进，正式进入过坑阶段")
-            action_append("Stand")
-            if  color == 'blue_hole_chest':
-                hole_edge_main('blue_hole_head')
-                break
-            elif color == 'green_hole_chest':
-                hole_edge_main('green_hole_head')
-                break
+            else:
+                print("已近迈进，正式进入过坑阶段")
+                action_append("Stand")
+                step=2
+        elif step==2:
+                if color == 'blue_hole_chest':
+                    hole_edge_main('blue_hole_head')
+                    break
+                elif color == 'green_hole_chest':
+                    hole_edge_main('green_hole_head')
+                    break
         
 def hole_edge_main(color):
     global HeadOrg_img,chest_copy, reset, skip,handling
@@ -2945,8 +2950,6 @@ def hole_edge_main(color):
                 else:
                     print("3312L 右看 X位置ok")
                     action_append("fastForward03")
-                    action_append("Forwalk01")
-                    action_append("Forwalk01")
                     # action_append("Left02move")
                     #print("向前一步")
                     # action_append("forwardSlow0403")
