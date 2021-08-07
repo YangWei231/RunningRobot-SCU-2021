@@ -54,8 +54,8 @@ color_range = {
     'yellow_door':[(34 , 37 , 126), (48 , 111 , 255)],#yw:起点和终点门上的黄色
     'black_door': [(50 , 27 , 22), (96 , 156 , 46)],#yw:起点和终点门上的黑色
     'blue_baf':[(93 , 149 , 74), (105 , 252 , 152)],#yw:挡板的蓝色
-    'black_dir':[(45 , 22 , 13), (128 , 135 , 57)],     #yw:地雷的黑色
-    'gray_dir':[(73 , 28 , 70), (91 , 100 , 194)],#yw：地雷关卡地板的灰色
+    'black_dir':[(27 , 22 , 12), (128 , 158 , 57)],     #yw:地雷的黑色
+    'gray_dir':[(73 , 28 , 56), (91 , 129 , 194)],#yw：地雷关卡地板的灰色
     'green_hole_chest':[(66 , 108 , 53), (76 , 243 , 168)],#yw:过坑的绿色（胸部检测）
     'green_hole_head':[(66 , 108 , 53), (76 , 243 , 168)],#yw:过坑的绿色（头部检测)
     'blue_floor':[(100 , 167 , 140), (105 , 234 , 252)],#yw:蓝色台阶
@@ -3038,20 +3038,7 @@ def obstacle():
             Bumask = cv2.dilate(Bumask, np.ones((3, 3), np.uint8), iterations=2)
             # cv2.imshow('Bluemask', Bumask)
             _, cntsblue, hierarchy = cv2.findContours(Bumask, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)  # 找出轮廓
-            #添加是否到板子边缘的决策，纠正绕行动作
-            Imask_whiteboard=cv2.inRange(hsv,color_range['gray_dir'][0],color_range['gray_dir'][1])
-            detect_right=[500,560,360,430]#从左到右是Y1,Y2,X1,X2
-            detect_left =[500,560,50 ,120]
-            single_right=Imask_whiteboard[detect_right[0]:detect_right[1],detect_right[2]:detect_right[3]]
-            single_left=Imask_whiteboard[detect_left[0]:detect_left[1], detect_left[2]:detect_left[3]]
-            area_right_detect=area_bits(single_right)
-            area_left_detect =area_bits(single_left)
-            if area_right_detect<0.5*(detect_right[1]-detect_right[0])*(detect_right[3]-detect_right[2]):
-                print("检测到右边是空的，是不是要摔了？")
-                fall_right = True
-            if area_left_detect <0.5*(detect_left[1]-detect_left[0])*(detect_left[3]-detect_left[2]):
-                print("检测到左边是空的，是不是要摔了？")
-                fall_left  = True
+            
             
             if cntsblue is not None:
                 cnt_large = getAreaMaxContour2(cntsblue)    # 取最大轮廓
@@ -3162,6 +3149,29 @@ def obstacle():
                     elif k == ord('s'):
                         print("save picture123")
                         cv2.imwrite("picture123.jpg",HeadOrg_img) #保存图片
+                #添加是否到板子边缘的决策，纠正绕行动作
+                fall_right=False
+                fall_left =False
+                Corg_img2 = ChestOrg_img.copy()
+                Corg_img2 = np.rot90(Corg_img2)
+                #Corg_img = Corg_img[int(200):int(400),int(100):int(500)]
+                Corg_img2 = Corg_img2.copy()
+                hsv2 = cv2.cvtColor(Corg_img2, cv2.COLOR_BGR2HSV)
+                Imask_whiteboard1=cv2.inRange(hsv2,color_range['gray_dir'][0],color_range['gray_dir'][1])
+                Imask_whiteboard2=cv2.inRange(hsv2,color_range['black_dir'][0],color_range['black_dir'][1])
+                Imask_whiteboard=cv2.bitwise_or(Imask_whiteboard1,Imask_whiteboard2)
+                detect_right=[530,570,380,420]#从左到右是Y1,Y2,X1,X2
+                detect_left =[530,570,60 ,100]
+                single_right=Imask_whiteboard[detect_right[0]:detect_right[1],detect_right[2]:detect_right[3]]
+                single_left=Imask_whiteboard[detect_left[0]:detect_left[1], detect_left[2]:detect_left[3]]
+                area_right_detect=area_bits(single_right)
+                area_left_detect =area_bits(single_left)
+                if area_right_detect<0.9*(detect_right[1]-detect_right[0])*(detect_right[3]-detect_right[2]):
+                    print("检测到右边是空的，是不是要摔了？")
+                    fall_right = True
+                if area_left_detect <0.9*(detect_left[1]-detect_left[0])*(detect_left[3]-detect_left[2]):
+                    print("检测到左边是空的，是不是要摔了？")
+                    fall_left  = True
 
                 
                 #370修改为360
@@ -3188,8 +3198,12 @@ def obstacle():
                     print("3580L 右平移一步 Right02move", Big_battle[0])
                     if fall_right==True:
                         print("但是右侧好像要摔了，还是往左走吧")
+                        action_append("Stand")
                         action_append("Left3move")
-                        action_append('Left3move')
+                        action_append("Stand")
+                        action_append("Left3move")
+                        action_append("Stand")
+                        action_append("Left3move")
                         continue
                     action_append("Stand")
                     action_append("Right02move")
@@ -3204,7 +3218,7 @@ def obstacle():
                         action_append("Stand")
                         action_append("Left3move")
                         action_append("Stand")
-                        action_append("Left02move")
+                        action_append("Left3move")
                         continue
                     action_append("Stand")
                     action_append("Right3move")
@@ -3226,7 +3240,7 @@ def obstacle():
                         action_append("Stand")
                         action_append("Right3move")
                         action_append("Stand")
-                        action_append("Right3move")
+                        
                         continue
                     action_append("Stand")
                     action_append("Left3move")
@@ -3241,8 +3255,14 @@ def obstacle():
                     print("3598L 向左平移一步 Left02move", Big_battle[0])
                     if fall_left==True:
                         print("但是左侧好像要摔了，还是往右走吧")
+                        action_append("Stand")
                         action_append("Right3move")
-                        action_append('Right3move')
+                        action_append("Stand")
+                        action_append("Right3move")
+                        action_append("Stand")
+                        action_append("Right3move")
+                        action_append("Stand")
+                        
                         continue
                     action_append("Stand")
                     action_append("Left02move")
