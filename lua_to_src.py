@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # coding:utf-8
-"""比赛方居然没有一个lua转src的程序，那我自己写一个-----杨巍“”“
+"""比赛发居然没有一个lua转src的程序，那我自己写一个-----杨巍“”“
 ”“”使用时将你想转换的function写到lua.txt文件里，放在该py
     文件同目录下，然后点击运行便开始转换了"""
 import re
@@ -43,7 +43,8 @@ for line in lines:
                       str(list[1]) + "\n")
         fo.writelines("MOTORD," + str(200-eval(list[11])) + "," + str(200-eval(list[10])) + "," +
                       str(200-eval(list[9])) + "\n")
-        fo.writelines("MOTORE," + str(list[19]) + "," + str(list[18]) + "," +
+
+        fo.writelines("MOTORE," + str(100 if (list[19]=='00' or list[19]=='0') else list[19]) + "," + str(list[18]) + "," +
                       str(list[17]) + "\n")
     elif "wait" in line:
         list = re.split('[,()]', line)
