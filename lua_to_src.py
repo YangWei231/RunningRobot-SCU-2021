@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # coding:utf-8
-"""比赛发居然没有一个lua转src的程序，那我自己写一个-----杨巍“”“
+"""比赛方居然没有一个lua转src的程序，那我自己写一个-----杨巍“”“
 ”“”使用时将你想转换的function写到lua.txt文件里，放在该py
     文件同目录下，然后点击运行便开始转换了"""
 import re
